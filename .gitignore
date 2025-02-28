@@ -1,0 +1,57 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual environments
+venv/
+env/
+.env/
+.venv/
+.venv/*
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model files and checkpoints
+*.h5
+*.hdf5
+*.pb
+*.ckpt
+*.pt
+*.pth
+saved_models/
+
+# Training outputs
+*.png
+*.jpg
+*.jpeg
+logs/
+tensorboard_logs/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Large datasets (consider using Git LFS if you want to track these)
+datasets/
+
+# Temporary files
+tmp/
+temp/
+
+# Logs
+*.log 
+
