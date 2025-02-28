@@ -13,23 +13,47 @@ from models.cnn_model import create_emotion_model
 
 def train_affectnet_model():
     """Train a model on the AffectNet dataset"""
-    # Create directory for saving models if it doesn't exist
-    os.makedirs(os.path.dirname(config.AFFECTNET_MODEL_PATH), exist_ok=True)
+    print("Training AffectNet model...")
+    
+    # Set emotion classes to AffectNet specific emotions
+    config.EMOTION_CLASSES = config.AFFECTNET_EMOTIONS
+    config.NUM_CLASSES = len(config.EMOTION_CLASSES)
+    
+    print(f"Using emotion classes: {config.EMOTION_CLASSES}")
     
     # Load data
-    print("Loading AffectNet dataset...")
     (X_train, y_train), (X_val, y_val) = load_affectnet()
+    
+    # Check if data was loaded successfully
+    if len(X_train) == 0 or len(X_val) == 0:
+        print("Error: Failed to load AffectNet dataset. Skipping model training.")
+        return None, None
+    
     print(f"Training data shape: {X_train.shape}")
     print(f"Validation data shape: {X_val.shape}")
     
+    # Create model
+    model = create_emotion_model(
+        input_shape=(config.IMG_SIZE, config.IMG_SIZE, config.IMG_CHANNELS),
+        num_classes=config.NUM_CLASSES
+    )
+    
+    # Create directory for saving models if it doesn't exist
+    os.makedirs(os.path.dirname(config.AFFECTNET_MODEL_PATH), exist_ok=True)
+    
     # Apply data augmentation to balance classes
     print("Applying data augmentation...")
-    X_train_aug, y_train_aug = apply_data_augmentation(X_train, y_train)
+    X_train_aug, y_train_aug = apply_data_augmentation(X_train, y_train, augmentation_factor=3)
     print(f"Augmented training data shape: {X_train_aug.shape}")
     
-    # Create model
-    print("Creating model...")
-    model = create_emotion_model()
+    # Compile model
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=config.LEARNING_RATE),
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    
+    print("Model summary:")
     model.summary()
     
     # Define callbacks

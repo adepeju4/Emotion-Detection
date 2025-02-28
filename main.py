@@ -19,7 +19,7 @@ try:
     from train.train_combined import train_combined_model
     print("Importing utility modules...")
     from utils.metrics import evaluate_model, compare_models
-    from utils.visualization import plot_confusion_matrix, visualize_predictions
+    from utils.visualization import plot_confusion_matrix, visualize_predictions, plot_all_datasets_distribution
     
     print("All modules imported successfully.")
 except Exception as e:
@@ -49,7 +49,15 @@ def main():
         train_new_models = True
         
         if train_new_models:
-            # Train individual models
+            print("\n=== Plotting Dataset Distributions ===")
+            plot_all_datasets_distribution()
+            
+            print("\n=== Verifying Dataset Configurations ===")
+            print(f"FER2013 emotions: {config.FER2013_EMOTIONS} ({len(config.FER2013_EMOTIONS)} classes)")
+            print(f"CK+ emotions: {config.CKPLUS_EMOTIONS} ({len(config.CKPLUS_EMOTIONS)} classes)")
+            print(f"AffectNet emotions: {config.AFFECTNET_EMOTIONS} ({len(config.AFFECTNET_EMOTIONS)} classes)")
+            print(f"Combined emotions: {config.COMBINED_MODEL_EMOTIONS} ({len(config.COMBINED_MODEL_EMOTIONS)} classes)")
+            
             print("\n=== Training FER2013 Model ===")
             fer2013_model, _ = train_fer2013_model()
             

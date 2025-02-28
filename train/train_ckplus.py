@@ -9,18 +9,29 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 from data_preprocessing.preprocess import load_ckplus, apply_data_augmentation
-from models.cnn_model import create_lightweight_model
+from models.cnn_model import create_lightweight_model, create_emotion_model
 
 def train_ckplus_model():
     """Train a model on the CK+ dataset"""
-    # Create directory for saving models if it doesn't exist
-    os.makedirs(os.path.dirname(config.CKPLUS_MODEL_PATH), exist_ok=True)
+    print("Training CK+ model...")
+    
+    # Set emotion classes to CK+ specific emotions
+    config.EMOTION_CLASSES = config.CKPLUS_EMOTIONS
+    config.NUM_CLASSES = len(config.EMOTION_CLASSES)
+    
+    print(f"Using emotion classes: {config.EMOTION_CLASSES}")
     
     # Load data
-    print("Loading CK+ dataset...")
     (X_train, y_train), (X_val, y_val) = load_ckplus()
-    print(f"Training data shape: {X_train.shape}")
-    print(f"Validation data shape: {X_val.shape}")
+    
+    # Create model
+    model = create_emotion_model(
+        input_shape=(config.IMG_SIZE, config.IMG_SIZE, config.IMG_CHANNELS),
+        num_classes=config.NUM_CLASSES
+    )
+    
+    # Create directory for saving models if it doesn't exist
+    os.makedirs(os.path.dirname(config.CKPLUS_MODEL_PATH), exist_ok=True)
     
     # Apply data augmentation to balance classes
     print("Applying data augmentation...")
@@ -29,7 +40,6 @@ def train_ckplus_model():
     
     # Create model - using lightweight model since CK+ is smaller
     print("Creating model...")
-    model = create_lightweight_model()
     model.summary()
     
     # Define callbacks

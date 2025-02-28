@@ -52,13 +52,30 @@ EMOTION_MAPPING = {
     }
 }
 
-# Standardized emotion classes for our models
-# We'll use a subset of emotions that are common across all datasets
-EMOTION_CLASSES = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise']
-# If you want to include all emotions:
-# EMOTION_CLASSES = ['anger', 'contempt', 'disgust', 'fear', 'happiness', 'neutral', 'sadness', 'surprise']
+# Dataset-specific emotion classes
+FER2013_EMOTIONS = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']
+CKPLUS_EMOTIONS = ['anger', 'contempt', 'disgust', 'fear', 'happiness', 'sadness', 'surprise']
+AFFECTNET_EMOTIONS = ['anger', 'contempt', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']
 
-# Number of classes
+# Common emotions across all datasets
+COMMON_EMOTIONS = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise']
+
+# Dataset-specific unique emotions
+FER2013_UNIQUE = ['neutral']
+CKPLUS_UNIQUE = ['contempt']
+AFFECTNET_UNIQUE = ['contempt', 'neutral']
+
+# Define which emotion set to use for each model
+FER2013_MODEL_EMOTIONS = FER2013_EMOTIONS
+CKPLUS_MODEL_EMOTIONS = CKPLUS_EMOTIONS
+AFFECTNET_MODEL_EMOTIONS = AFFECTNET_EMOTIONS
+COMBINED_MODEL_EMOTIONS = list(set(FER2013_EMOTIONS + CKPLUS_EMOTIONS + AFFECTNET_EMOTIONS))
+
+# Default emotion classes for the current application
+# Change this based on which model you're using
+EMOTION_CLASSES = COMMON_EMOTIONS  # Using common emotions as default
+
+# Number of classes (will be updated based on which model is loaded)
 NUM_CLASSES = len(EMOTION_CLASSES)
 
 # Model save paths
