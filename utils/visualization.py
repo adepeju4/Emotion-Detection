@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -5,6 +6,139 @@ from sklearn.metrics import confusion_matrix
 import tensorflow as tf
 import cv2
 import config
+
+def plot_all_datasets_distribution():
+    """
+    Plot emotion distribution for all datasets and save the plots
+    """
+    # Create directory for plots if it doesn't exist
+    os.makedirs('plots', exist_ok=True)
+    
+    # Save original emotion classes
+    original_emotion_classes = config.EMOTION_CLASSES
+    
+    # Plot FER2013 distribution
+    print("Plotting FER2013 emotion distribution...")
+    from data_preprocessing.preprocess import load_fer2013
+    config.EMOTION_CLASSES = config.FER2013_EMOTIONS
+    config.NUM_CLASSES = len(config.EMOTION_CLASSES)
+    try:
+        (train_X, train_y), (test_X, test_y) = load_fer2013()
+        if len(train_y) > 0 and len(test_y) > 0:
+            # Count samples per class
+            train_counts = np.sum(train_y, axis=0)
+            test_counts = np.sum(test_y, axis=0)
+            total_counts = train_counts + test_counts
+            
+            # Create figure
+            plt.figure(figsize=(12, 6))
+            
+            # Create bar plot
+            bars = plt.bar(range(len(config.FER2013_EMOTIONS)), total_counts)
+            
+            # Add labels and title
+            plt.xlabel('Emotion')
+            plt.ylabel('Number of Samples')
+            plt.title('Emotion Distribution in FER2013 Dataset')
+            
+            # Add x-tick labels
+            plt.xticks(range(len(config.FER2013_EMOTIONS)), config.FER2013_EMOTIONS, rotation=45)
+            
+            # Add count labels on top of bars
+            for i, bar in enumerate(bars):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + 0.1,
+                        f'{int(height)}', ha='center', va='bottom')
+            
+            plt.tight_layout()
+            plt.savefig('plots/fer2013_distribution.png')
+            plt.close()
+    except Exception as e:
+        print(f"Error plotting FER2013 distribution: {e}")
+    
+    # Plot CK+ distribution
+    print("Plotting CK+ emotion distribution...")
+    from data_preprocessing.preprocess import load_ckplus
+    config.EMOTION_CLASSES = config.CKPLUS_EMOTIONS
+    config.NUM_CLASSES = len(config.EMOTION_CLASSES)
+    try:
+        (train_X, train_y), (test_X, test_y) = load_ckplus()
+        if len(train_y) > 0 and len(test_y) > 0:
+            # Count samples per class
+            train_counts = np.sum(train_y, axis=0)
+            test_counts = np.sum(test_y, axis=0)
+            total_counts = train_counts + test_counts
+            
+            # Create figure
+            plt.figure(figsize=(12, 6))
+            
+            # Create bar plot
+            bars = plt.bar(range(len(config.CKPLUS_EMOTIONS)), total_counts)
+            
+            # Add labels and title
+            plt.xlabel('Emotion')
+            plt.ylabel('Number of Samples')
+            plt.title('Emotion Distribution in CK+ Dataset')
+            
+            # Add x-tick labels
+            plt.xticks(range(len(config.CKPLUS_EMOTIONS)), config.CKPLUS_EMOTIONS, rotation=45)
+            
+            # Add count labels on top of bars
+            for i, bar in enumerate(bars):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + 0.1,
+                        f'{int(height)}', ha='center', va='bottom')
+            
+            plt.tight_layout()
+            plt.savefig('plots/ckplus_distribution.png')
+            plt.close()
+    except Exception as e:
+        print(f"Error plotting CK+ distribution: {e}")
+    
+    # Plot AffectNet distribution
+    print("Plotting AffectNet emotion distribution...")
+    from data_preprocessing.preprocess import load_affectnet
+    config.EMOTION_CLASSES = config.AFFECTNET_EMOTIONS
+    config.NUM_CLASSES = len(config.EMOTION_CLASSES)
+    try:
+        (train_X, train_y), (test_X, test_y) = load_affectnet()
+        if len(train_y) > 0 and len(test_y) > 0:
+            # Count samples per class
+            train_counts = np.sum(train_y, axis=0)
+            test_counts = np.sum(test_y, axis=0)
+            total_counts = train_counts + test_counts
+            
+            # Create figure
+            plt.figure(figsize=(12, 6))
+            
+            # Create bar plot
+            bars = plt.bar(range(len(config.AFFECTNET_EMOTIONS)), total_counts)
+            
+            # Add labels and title
+            plt.xlabel('Emotion')
+            plt.ylabel('Number of Samples')
+            plt.title('Emotion Distribution in AffectNet Dataset')
+            
+            # Add x-tick labels
+            plt.xticks(range(len(config.AFFECTNET_EMOTIONS)), config.AFFECTNET_EMOTIONS, rotation=45)
+            
+            # Add count labels on top of bars
+            for i, bar in enumerate(bars):
+                height = bar.get_height()
+                plt.text(bar.get_x() + bar.get_width()/2., height + 0.1,
+                        f'{int(height)}', ha='center', va='bottom')
+            
+            plt.tight_layout()
+            plt.savefig('plots/affectnet_distribution.png')
+            plt.close()
+    except Exception as e:
+        print(f"Error plotting AffectNet distribution: {e}")
+    
+    # Restore original emotion classes
+    config.EMOTION_CLASSES = original_emotion_classes
+    config.NUM_CLASSES = len(config.EMOTION_CLASSES)
+    
+    print("All distribution plots saved to 'plots' directory")
 
 def plot_confusion_matrix(y_true, y_pred, class_names=config.EMOTION_CLASSES):
     """Plot confusion matrix for model evaluation"""

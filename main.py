@@ -49,8 +49,8 @@ def main():
         train_new_models = True
         
         if train_new_models:
-            print("\n=== Plotting Dataset Distributions ===")
-            plot_all_datasets_distribution()
+            print("\n=== Skipping Dataset Distributions Plotting ===")
+            # plot_all_datasets_distribution()  # Uncomment when visualization.py is updated
             
             print("\n=== Verifying Dataset Configurations ===")
             print(f"FER2013 emotions: {config.FER2013_EMOTIONS} ({len(config.FER2013_EMOTIONS)} classes)")
