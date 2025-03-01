@@ -207,7 +207,7 @@ def load_affectnet():
         
         # Determine the image path column name
         path_column = None
-        possible_path_columns = ['path', 'image', 'file', 'filename', 'subDirectory_filePath']
+        possible_path_columns = ['path', 'image', 'file', 'filename', 'subDirectory_filePath', 'pth']
         for col in possible_path_columns:
             if col in df.columns:
                 path_column = col

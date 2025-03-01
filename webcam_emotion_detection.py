@@ -49,11 +49,40 @@ def preprocess_frame(frame, target_size=(config.IMG_SIZE, config.IMG_SIZE)):
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
     faces = face_cascade.detectMultiScale(
         gray,
-        scaleFactor=1.1,       # Smaller scale factor for better detection
-        minNeighbors=5,        # Higher threshold to reduce false positives
-        minSize=(min_face_size, min_face_size),  # Minimum face size
+        scaleFactor=1.1,       
+        minNeighbors=8,        # Increased from 5 to reduce false positives
+        minSize=(min_face_size, min_face_size),
         flags=cv2.CASCADE_SCALE_IMAGE
     )
+    
+    # Filter out overlapping faces
+    filtered_faces = []
+    for i, face_i in enumerate(faces):
+        x_i, y_i, w_i, h_i = face_i
+        area_i = w_i * h_i
+        keep = True
+        
+        for j, face_j in enumerate(faces):
+            if i == j:
+                continue
+                
+            x_j, y_j, w_j, h_j = face_j
+            
+            # Check if faces overlap significantly
+            overlap_x = max(0, min(x_i + w_i, x_j + w_j) - max(x_i, x_j))
+            overlap_y = max(0, min(y_i + h_i, y_j + h_j) - max(y_i, y_j))
+            overlap_area = overlap_x * overlap_y
+            
+            # If there's significant overlap and the other face is larger
+            if overlap_area > 0.3 * area_i and w_j * h_j > area_i:
+                keep = False
+                break
+                
+        if keep:
+            filtered_faces.append(face_i)
+    
+    # Replace original faces with filtered ones
+    faces = filtered_faces
     
     processed_faces = []
     face_locations = []
