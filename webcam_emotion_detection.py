@@ -6,6 +6,7 @@ import os
 import sys
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import argparse
 
 # Add the project root to the path so we can import config
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -26,8 +27,14 @@ EMOTION_COLORS = {
     'sadness': (255, 0, 0),     # Blue
     'sad': (255, 0, 0),         # Blue (alternative name)
     'surprise': (0, 255, 0),    # Green
-    'neutral': (255, 255, 255)  # White
+    'neutral': (128, 128, 128)  # Grey
 }
+
+# Choose which model to use: 'fer2013', 'ckplus', 'affectnet', or 'combined'
+SELECTED_MODEL = 'ckplus'
+
+# At the top of your script
+DEBUG_MODE = True
 
 def preprocess_frame(frame, target_size=(config.IMG_SIZE, config.IMG_SIZE)):
     """Preprocess a webcam frame for prediction with improved face detection"""
@@ -142,43 +149,35 @@ def update_emotion_bar_chart(fig, ax, bars, prediction):
     return chart_image
 
 def run_webcam_detection():
-    """Run real-time emotion detection on webcam feed"""
-    # Check if model exists, if not, inform user
-    if not os.path.exists(config.CKPLUS_MODEL_PATH):
-        print(f"Model not found at {config.CKPLUS_MODEL_PATH}")
-        print("Please train the model first or specify the correct model path.")
-        return
+    """Run real-time emotion detection on webcam feed with multiple models"""
+    # Create model manager
+    model_manager = EmotionModelManager()
     
-    # Load model
-    print("Loading model...")
-    model = tf.keras.models.load_model(config.CKPLUS_MODEL_PATH)
+    # Load all models with EXACT emotion orders from your datasets
+    # FER2013: Based on your dataset structure
+    model_manager.load_model(
+        'fer2013', 
+        config.FER2013_MODEL_PATH, 
+        ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
+    )
     
-    # Print model output shape for debugging
-    print(f"Model output shape: {model.output_shape}")
-    num_classes = model.output_shape[-1]
-    print(f"Number of output classes: {num_classes}")
+    # CK+: Based on your dataset structure
+    model_manager.load_model(
+        'ckplus', 
+        config.CKPLUS_MODEL_PATH, 
+        ['anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
+    )
     
-    # Determine which emotion set to use based on the model's output shape
-    if num_classes == len(config.FER2013_EMOTIONS):
-        emotion_classes = config.FER2013_EMOTIONS
-        print("Using FER2013 emotion classes")
-    elif num_classes == len(config.CKPLUS_EMOTIONS):
-        emotion_classes = config.CKPLUS_EMOTIONS
-        print("Using CK+ emotion classes")
-    elif num_classes == len(config.AFFECTNET_EMOTIONS):
-        emotion_classes = config.AFFECTNET_EMOTIONS
-        print("Using AffectNet emotion classes")
-    elif num_classes == len(config.COMBINED_MODEL_EMOTIONS):
-        emotion_classes = config.COMBINED_MODEL_EMOTIONS
-        print("Using combined emotion classes")
-    else:
-        # Fallback to default
-        emotion_classes = config.COMMON_EMOTIONS
-        print(f"Using common emotion classes (model has {num_classes} outputs)")
-        if num_classes != len(emotion_classes):
-            print("WARNING: Model output classes don't match emotion classes!")
+    # AffectNet: Based on your dataset structure
+    model_manager.load_model(
+        'affectnet', 
+        config.AFFECTNET_MODEL_PATH, 
+        ['anger', 'contempt', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+    )
     
-    print(f"Emotion classes for this model: {emotion_classes}")
+    # Set initial active model
+    active_model = 'fer2013'  # Default
+    model_manager.set_active_model(active_model)
     
     # Start webcam
     print("Starting webcam...")
@@ -192,21 +191,27 @@ def run_webcam_detection():
     webcam_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     webcam_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     
-    # Create emotion bar chart
-    sidebar_width = 400  # Width of the sidebar in pixels
-    chart_height = webcam_height // 2  # Height of the chart (half of webcam height)
-    
-    fig, ax, bars, _ = create_emotion_bar_chart(
-        figsize=(sidebar_width/100, chart_height/100),
-        emotion_classes=emotion_classes
-    )
-    chart_image = None
+    # Create emotion bar charts for each model
+    charts = {}
+    for model_name in model_manager.models.keys():
+        emotion_classes = model_manager.emotion_classes[model_name]
+        fig, ax, bars, _ = create_emotion_bar_chart(
+            figsize=(4, 3),
+            emotion_classes=emotion_classes
+        )
+        charts[model_name] = {
+            'fig': fig,
+            'ax': ax,
+            'bars': bars,
+            'image': None
+        }
     
     # Create a combined display frame (webcam feed + sidebar)
+    sidebar_width = 400  # Width of the sidebar in pixels
     combined_width = webcam_width + sidebar_width
     combined_height = webcam_height
     
-    print("Webcam started. Press 'q' to quit.")
+    print("Webcam started. Press 'q' to quit, '1' for FER2013, '2' for CK+, '3' for AffectNet")
     
     # For tracking FPS
     frame_count = 0
@@ -222,60 +227,59 @@ def run_webcam_detection():
         # Create a copy for display
         display_frame = frame.copy()
         
-        # Preprocess frame
+        # Preprocess frame for prediction
         faces, face_locations = preprocess_frame(frame)
         
-        # Create combined frame (black background)
+        # Create combined frame (webcam + sidebar)
         combined_frame = np.zeros((combined_height, combined_width, 3), dtype=np.uint8)
         
-        # Add padding to sidebar (dark gray background)
-        sidebar_padding = 15  # Increased padding
-        cv2.rectangle(combined_frame, 
-                     (webcam_width + sidebar_padding, sidebar_padding), 
-                     (combined_width - sidebar_padding, combined_height - sidebar_padding), 
-                     (50, 50, 50), -1)  # Dark gray background
-        
-        # Place webcam feed on the left side
+        # Place webcam feed on the left
         combined_frame[0:webcam_height, 0:webcam_width] = display_frame
         
+        # Create sidebar (black background)
+        sidebar_padding = 10
+        
+        # Process faces if detected
         if faces is not None and len(faces) > 0:
-            # Make predictions for each face
-            predictions = model.predict(faces)
+            # Get predictions from all models
+            all_predictions = model_manager.predict(faces)
             
-            # Update bar chart with prediction from the first face
-            chart_image = update_emotion_bar_chart(fig, ax, bars, predictions[0])
+            # Update charts for all models
+            for model_name, (predictions, emotion_classes) in all_predictions.items():
+                chart = charts[model_name]
+                chart['image'] = update_emotion_bar_chart(chart['fig'], chart['ax'], chart['bars'], predictions[0])
             
-            # Display results for each face
+            # Process active model predictions
+            active_predictions, active_emotion_classes = all_predictions[active_model]
+            
+            # Draw rectangles and labels for each face using active model
             for i, (x, y, w, h) in enumerate(face_locations):
-                # Get prediction for this face
-                prediction = predictions[i]
+                # Get the predicted emotion for this face
+                prediction = active_predictions[i]
                 emotion_idx = np.argmax(prediction)
-                emotion = emotion_classes[emotion_idx]
+                emotion = active_emotion_classes[emotion_idx]
                 confidence = prediction[emotion_idx] * 100
                 
-                # Get color for this emotion
-                color = EMOTION_COLORS.get(emotion, (0, 255, 0))
+                # Get color for the predicted emotion
+                color = EMOTION_COLORS.get(emotion, (255, 255, 255))
                 
-                # Draw rectangle around face (1px)
-                cv2.rectangle(display_frame, (x, y), (x+w, y+h), color, 1)
+                # Draw rectangle around face
+                cv2.rectangle(combined_frame, (x, y), (x+w, y+h), color, 2)
                 
-                # Create background for text
-                text = f"{emotion} ({confidence:.1f}%)"
-                text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 1)[0]
-                cv2.rectangle(display_frame, 
-                              (x, y - text_size[1] - 10), 
-                              (x + text_size[0], y), 
-                              color, -1)  # Filled rectangle
+                # Draw label background
+                label_bg_color = (*color, 0.7)  # Add alpha for transparency
+                label_text = f"{emotion} ({confidence:.1f}%)"
+                (text_width, text_height), _ = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                cv2.rectangle(combined_frame, (x, y-text_height-10), (x+text_width+10, y), color, -1)
                 
-                # Display emotion text (white on colored background)
-                cv2.putText(display_frame, text, (x, y-5), 
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
-            
-            # Update the webcam feed in the combined frame
-            combined_frame[0:webcam_height, 0:webcam_width] = display_frame
+                # Draw label text
+                cv2.putText(combined_frame, label_text, (x+5, y-5), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Update frame count for FPS calculation
+        frame_count += 1
         
         # Calculate and display FPS
-        frame_count += 1
         if frame_count >= 10:  # Update FPS every 10 frames
             current_time = cv2.getTickCount()
             elapsed_time = (current_time - start_time) / cv2.getTickFrequency()
@@ -289,22 +293,312 @@ def run_webcam_detection():
             cv2.putText(combined_frame, f"FPS: {fps:.1f}", (10, 30), 
                         cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 1)
         
-        # Add emotion bar chart to the bottom of the sidebar if available
-        if chart_image is not None:
-            # Calculate position for chart (bottom of sidebar with padding)
-            chart_y = combined_height - chart_height - sidebar_padding * 2
+        # Display active model name
+        cv2.putText(combined_frame, f"Active Model: {active_model}", 
+                   (webcam_width + sidebar_padding, 30), 
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
+        
+        # Add charts for all models to the sidebar
+        y_offset = 60
+        for model_name, chart_data in charts.items():
+            if chart_data['image'] is not None:
+                # Resize chart to fit in the sidebar
+                chart_height = 150
+                resized_chart = cv2.resize(chart_data['image'], 
+                                         (sidebar_width - sidebar_padding * 2, chart_height))
+                
+                # Place the chart in the sidebar
+                combined_frame[y_offset:y_offset+chart_height, 
+                             webcam_width+sidebar_padding:webcam_width+sidebar_width-sidebar_padding] = resized_chart
+                
+                # Add title above the chart
+                cv2.putText(combined_frame, f"{model_name} Emotions", 
+                           (webcam_width + sidebar_padding + 10, y_offset - 10), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+                
+                # Highlight active model
+                if model_name == active_model:
+                    cv2.rectangle(combined_frame, 
+                                 (webcam_width+5, y_offset-30), 
+                                 (webcam_width+sidebar_width-5, y_offset+chart_height+5), 
+                                 (0, 255, 0), 2)
+                
+                y_offset += chart_height + 30
+        
+        # Display the combined frame
+        cv2.imshow('Emotion Detection', combined_frame)
+        
+        # Handle key presses
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
+            break
+        elif key == ord('1'):
+            active_model = 'fer2013'
+            model_manager.set_active_model(active_model)
+        elif key == ord('2'):
+            active_model = 'ckplus'
+            model_manager.set_active_model(active_model)
+        elif key == ord('3'):
+            active_model = 'affectnet'
+            model_manager.set_active_model(active_model)
+    
+    # Release resources
+    cap.release()
+    cv2.destroyAllWindows()
+    for chart_data in charts.values():
+        plt.close(chart_data['fig'])
+    print("Webcam closed.")
+
+    if DEBUG_MODE:
+        # Print raw prediction values
+        print("\nRaw prediction values:")
+        for i, emotion in enumerate(active_emotion_classes):
+            print(f"{emotion}: {active_predictions[i]:.6f}")
+
+class EmotionModelManager:
+    """Class to manage multiple emotion detection models"""
+    
+    def __init__(self):
+        self.models = {}
+        self.emotion_classes = {}
+        self.active_model = None
+    
+    def load_model(self, model_name, model_path, emotion_classes):
+        """Load a model and its emotion classes"""
+        if not os.path.exists(model_path):
+            print(f"Model not found at {model_path}")
+            return False
+        
+        try:
+            print(f"Loading {model_name} model...")
+            model = tf.keras.models.load_model(model_path)
             
-            # Resize chart to fit in the sidebar with padding
+            # Print model output shape for debugging
+            print(f"Model output shape: {model.output_shape}")
+            num_classes = model.output_shape[-1]
+            print(f"Number of output classes: {num_classes}")
+            
+            # Check if the number of classes matches
+            if num_classes != len(emotion_classes):
+                print(f"WARNING: Model has {num_classes} outputs but we're using {len(emotion_classes)} emotion classes!")
+                # Adjust emotion classes if needed
+                if model_name == 'ckplus' and num_classes == 6:
+                    # Remove contempt for 6-class CK+
+                    emotion_classes = [e for e in emotion_classes if e != 'contempt']
+                    print(f"Adjusted to 6-class CK+ emotions: {emotion_classes}")
+            
+            # Store the model and its emotion classes
+            self.models[model_name] = model
+            self.emotion_classes[model_name] = emotion_classes
+            
+            # Set as active model if it's the first one
+            if not self.active_model:
+                self.active_model = model_name
+                
+            return True
+        except Exception as e:
+            print(f"Error loading model {model_name}: {e}")
+            return False
+    
+    def predict(self, face_input, model_name=None):
+        """Make a prediction using the specified model or all models"""
+        if model_name and model_name in self.models:
+            # Predict with specific model
+            model = self.models[model_name]
+            prediction = model.predict(face_input, verbose=0)
+            return {model_name: (prediction, self.emotion_classes[model_name])}
+        else:
+            # Predict with all models
+            results = {}
+            for name, model in self.models.items():
+                prediction = model.predict(face_input, verbose=0)
+                results[name] = (prediction, self.emotion_classes[name])
+            return results
+    
+    def set_active_model(self, model_name):
+        """Set the active model for display"""
+        if model_name in self.models:
+            self.active_model = model_name
+            return True
+        return False
+    
+    def get_active_model(self):
+        """Get the active model name"""
+        return self.active_model
+
+def run_single_model_detection(model_name):
+    """Run webcam detection with a single model"""
+    # Set model path and emotion classes based on selected model
+    if model_name == 'fer2013':
+        model_path = config.FER2013_MODEL_PATH
+        emotion_classes = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
+    elif model_name == 'ckplus':
+        model_path = config.CKPLUS_MODEL_PATH
+        emotion_classes = ['anger', 'contempt', 'disgust', 'fear', 'happy', 'sadness', 'surprise']
+    elif model_name == 'affectnet':
+        model_path = config.AFFECTNET_MODEL_PATH
+        emotion_classes = ['anger', 'contempt', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
+    elif model_name == 'combined':
+        model_path = config.COMBINED_MODEL_PATH
+        emotion_classes = config.COMBINED_MODEL_EMOTIONS
+    else:
+        # Default to FER2013
+        model_path = config.FER2013_MODEL_PATH
+        emotion_classes = ['angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral']
+    
+    # Check if model exists
+    if not os.path.exists(model_path):
+        print(f"Model not found at {model_path}")
+        print("Please train the model first or specify the correct model path.")
+        return
+    
+    # Load model
+    print(f"Loading {model_name} model...")
+    try:
+        model = tf.keras.models.load_model(model_path)
+        print("Model loaded successfully!")
+    except Exception as e:
+        print(f"Error loading model: {e}")
+        return
+    
+    # Print model output shape for debugging
+    print(f"Model output shape: {model.output_shape}")
+    num_classes = model.output_shape[-1]
+    print(f"Number of output classes: {num_classes}")
+    
+    # Check if the number of classes matches
+    if num_classes != len(emotion_classes):
+        print(f"WARNING: Model has {num_classes} outputs but we're using {len(emotion_classes)} emotion classes!")
+        # Adjust emotion classes if needed
+        if model_name == 'ckplus' and num_classes == 6:
+            # Remove contempt for 6-class CK+
+            emotion_classes = [e for e in emotion_classes if e != 'contempt']
+            print(f"Adjusted to 6-class CK+ emotions: {emotion_classes}")
+    
+    print(f"Using emotion classes: {emotion_classes}")
+    
+    # Create emotion bar chart
+    fig, ax, bars, _ = create_emotion_bar_chart(
+        figsize=(4, 3),
+        emotion_classes=emotion_classes
+    )
+    
+    # Start webcam
+    print("Starting webcam...")
+    cap = cv2.VideoCapture(0)
+    
+    if not cap.isOpened():
+        print("Error: Could not open webcam.")
+        return
+    
+    # Get webcam dimensions
+    webcam_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    webcam_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
+    # Create a combined display frame (webcam feed + sidebar)
+    sidebar_width = 400  # Width of the sidebar in pixels
+    combined_width = webcam_width + sidebar_width
+    combined_height = webcam_height
+    
+    # For tracking FPS
+    frame_count = 0
+    start_time = cv2.getTickCount()
+    
+    # For storing chart image
+    chart_image = None
+    
+    while True:
+        # Capture frame
+        ret, frame = cap.read()
+        if not ret:
+            print("Error: Failed to capture image")
+            break
+        
+        # Create a copy for display
+        display_frame = frame.copy()
+        
+        # Preprocess frame for prediction
+        faces, face_locations = preprocess_frame(frame)
+        
+        # Create combined frame (webcam + sidebar)
+        combined_frame = np.zeros((combined_height, combined_width, 3), dtype=np.uint8)
+        
+        # Place webcam feed on the left
+        combined_frame[0:webcam_height, 0:webcam_width] = display_frame
+        
+        # Create sidebar (black background)
+        sidebar_padding = 10
+        
+        # Process faces if detected
+        if faces is not None and len(faces) > 0:
+            # Make predictions
+            predictions = model.predict(faces, verbose=0)
+            
+            # Update chart
+            chart_image = update_emotion_bar_chart(fig, ax, bars, predictions[0])
+            
+            # Draw rectangles and labels for each face
+            for i, (x, y, w, h) in enumerate(face_locations):
+                # Get the predicted emotion for this face
+                prediction = predictions[i]
+                emotion_idx = np.argmax(prediction)
+                emotion = emotion_classes[emotion_idx]
+                confidence = prediction[emotion_idx] * 100
+                
+                # Get color for the predicted emotion
+                color = EMOTION_COLORS.get(emotion, (255, 255, 255))
+                
+                # Draw rectangle around face
+                cv2.rectangle(combined_frame, (x, y), (x+w, y+h), color, 2)
+                
+                # Draw label background
+                label_text = f"{emotion} ({confidence:.1f}%)"
+                (text_width, text_height), _ = cv2.getTextSize(label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                cv2.rectangle(combined_frame, (x, y-text_height-10), (x+text_width+10, y), color, -1)
+                
+                # Draw label text
+                cv2.putText(combined_frame, label_text, (x+5, y-5), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Update frame count for FPS calculation
+        frame_count += 1
+        
+        # Calculate and display FPS
+        if frame_count >= 10:  # Update FPS every 10 frames
+            current_time = cv2.getTickCount()
+            elapsed_time = (current_time - start_time) / cv2.getTickFrequency()
+            fps = frame_count / elapsed_time
+            
+            # Reset counters
+            frame_count = 0
+            start_time = current_time
+            
+            # Display FPS
+            cv2.putText(combined_frame, f"FPS: {fps:.1f}", (10, 30), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 1)
+        
+        # Display model name
+        cv2.putText(combined_frame, f"Model: {model_name}", 
+                   (webcam_width + sidebar_padding, 30), 
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
+        
+        # Add emotion chart to the sidebar if available
+        if chart_image is not None:
+            # Calculate position for chart
+            chart_height = 300
+            chart_y = (combined_height - chart_height) // 2
+            
+            # Resize chart to fit in the sidebar
             resized_chart = cv2.resize(chart_image, 
-                                      (sidebar_width - sidebar_padding * 2, chart_height))
+                                     (sidebar_width - sidebar_padding * 2, chart_height))
             
             # Place the chart in the sidebar
             combined_frame[chart_y:chart_y+chart_height, 
-                          webcam_width+sidebar_padding:webcam_width+sidebar_width-sidebar_padding] = resized_chart
+                         webcam_width+sidebar_padding:webcam_width+sidebar_width-sidebar_padding] = resized_chart
             
             # Add title above the chart
             cv2.putText(combined_frame, "Detected Emotions", 
-                       (webcam_width + sidebar_padding + 10, chart_y - 20), 
+                       (webcam_width + sidebar_padding + 10, chart_y - 10), 
                        cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
         
         # Display the combined frame
@@ -319,8 +613,26 @@ def run_webcam_detection():
     cv2.destroyAllWindows()
     plt.close(fig)
     print("Webcam closed.")
+    
+    if DEBUG_MODE:
+        # Print raw prediction values
+        print("\nRaw prediction values:")
+        for i, emotion in enumerate(emotion_classes):
+            print(f"{emotion}: {predictions[0][i]:.6f}")
 
 if __name__ == "__main__":
-    print("Starting Emotion Detection Webcam Demo")
+    # Create argument parser
+    parser = argparse.ArgumentParser(description='Emotion Detection Webcam Demo')
+    parser.add_argument('--model', type=str, default='fer2013', 
+                        choices=['fer2013', 'ckplus', 'affectnet', 'combined'],
+                        help='Which model to use for detection')
+    args = parser.parse_args()
+    
+    # Set the selected model based on command-line argument
+    SELECTED_MODEL = args.model
+    
+    print(f"Starting Emotion Detection Webcam Demo with {SELECTED_MODEL} model")
     print(f"Detected emotion classes: {config.EMOTION_CLASSES}")
-    run_webcam_detection()
+    
+    # Run webcam detection with a single model
+    run_single_model_detection(SELECTED_MODEL)
