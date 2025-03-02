@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.applications import MobileNetV2, ResNet50V2
+from tensorflow.keras.applications import MobileNetV2, EfficientNetB0
 from tensorflow.keras.layers import GlobalAveragePooling2D, Dense, Dropout, BatchNormalization
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
@@ -16,11 +16,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import config
 from data_preprocessing.preprocess import load_affectnet
 
-def create_transfer_learning_model(base_model_name='mobilenetv2', num_classes=8):
+def create_transfer_learning_model(base_model_name='efficientnet', num_classes=8):
     """Create a transfer learning model for emotion recognition
     
     Args:
-        base_model_name: 'mobilenetv2' or 'resnet50v2'
+        base_model_name: 'mobilenetv2' or 'efficientnet'
         num_classes: Number of emotion classes
     """
     input_shape = (config.IMG_SIZE, config.IMG_SIZE, 3)
@@ -28,8 +28,8 @@ def create_transfer_learning_model(base_model_name='mobilenetv2', num_classes=8)
     # Select base model
     if base_model_name.lower() == 'mobilenetv2':
         base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=input_shape)
-    elif base_model_name.lower() == 'resnet50v2':
-        base_model = ResNet50V2(weights='imagenet', include_top=False, input_shape=input_shape)
+    elif base_model_name.lower() == 'efficientnet':
+        base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=input_shape)
     else:
         raise ValueError(f"Unknown base model: {base_model_name}")
     
@@ -37,15 +37,21 @@ def create_transfer_learning_model(base_model_name='mobilenetv2', num_classes=8)
     for layer in base_model.layers:
         layer.trainable = False
     
-    # Add custom classification head
+    # Add custom classification head with stronger regularization
     x = base_model.output
     x = GlobalAveragePooling2D()(x)
-    x = Dense(1024, activation='relu')(x)
+    
+    # First dense block with stronger regularization
+    x = Dense(512, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001))(x)
     x = BatchNormalization()(x)
     x = Dropout(0.5)(x)
-    x = Dense(512, activation='relu')(x)
+    
+    # Second dense block
+    x = Dense(256, activation='relu', kernel_regularizer=tf.keras.regularizers.l2(0.001))(x)
     x = BatchNormalization()(x)
-    x = Dropout(0.3)(x)
+    x = Dropout(0.4)(x)
+    
+    # Output layer
     predictions = Dense(num_classes, activation='softmax')(x)
     
     model = Model(inputs=base_model.input, outputs=predictions)
@@ -68,7 +74,18 @@ def compute_class_weights(y_train):
     class_weight_dict = {i: weight for i, weight in enumerate(class_weights)}
     return class_weight_dict
 
-def train_affectnet_improved(base_model_name='mobilenetv2', fine_tune=True):
+def preprocess_images(images):
+    """Apply additional preprocessing to images"""
+    # Ensure pixel values are in [0, 1]
+    if np.max(images) > 1.0:
+        images = images / 255.0
+    
+    # Apply normalization for pretrained models
+    images = tf.keras.applications.mobilenet_v2.preprocess_input(images)
+    
+    return images
+
+def train_affectnet_improved(base_model_name='efficientnet', fine_tune=True):
     """Train an improved model on the AffectNet dataset using transfer learning"""
     print(f"Training improved AffectNet model using {base_model_name}...")
     
@@ -95,6 +112,10 @@ def train_affectnet_improved(base_model_name='mobilenetv2', fine_tune=True):
         X_val = np.repeat(X_val, 3, axis=-1)
         print(f"Converted grayscale to RGB. New shape: {X_train.shape}")
     
+    # Apply additional preprocessing
+    X_train = preprocess_images(X_train)
+    X_val = preprocess_images(X_val)
+    
     # Create model
     model, base_model = create_transfer_learning_model(
         base_model_name=base_model_name,
@@ -111,26 +132,26 @@ def train_affectnet_improved(base_model_name='mobilenetv2', fine_tune=True):
     
     # Compile model with categorical crossentropy loss
     model.compile(
-        optimizer=Adam(learning_rate=0.001),
-        loss=CategoricalCrossentropy(label_smoothing=0.1),  # Using label smoothing instead of focal loss
+        optimizer=Adam(learning_rate=0.0005),  # Lower initial learning rate
+        loss=CategoricalCrossentropy(label_smoothing=0.2),  # Increased label smoothing
         metrics=['accuracy']
     )
     
     print("Model summary:")
     model.summary()
     
-    # Define callbacks
+    # Define callbacks with more patience
     callbacks = [
         EarlyStopping(
             monitor='val_accuracy',
-            patience=10,
+            patience=15,  # More patience
             verbose=1,
             restore_best_weights=True
         ),
         ReduceLROnPlateau(
             monitor='val_loss',
             factor=0.2,
-            patience=5,
+            patience=7,  # More patience
             verbose=1,
             min_lr=1e-6
         ),
@@ -148,7 +169,7 @@ def train_affectnet_improved(base_model_name='mobilenetv2', fine_tune=True):
     history1 = model.fit(
         X_train, y_train,
         batch_size=32,
-        epochs=20,
+        epochs=25,  # More epochs
         validation_data=(X_val, y_val),
         callbacks=callbacks,
         class_weight=class_weights
@@ -162,15 +183,15 @@ def train_affectnet_improved(base_model_name='mobilenetv2', fine_tune=True):
             # Unfreeze the last 23 layers (last 3 blocks of MobileNetV2)
             for layer in base_model.layers[-23:]:
                 layer.trainable = True
-        elif base_model_name.lower() == 'resnet50v2':
-            # Unfreeze the last 50 layers
-            for layer in base_model.layers[-50:]:
+        elif base_model_name.lower() == 'efficientnet':
+            # Unfreeze the last 30 layers
+            for layer in base_model.layers[-30:]:
                 layer.trainable = True
         
         # Recompile with a lower learning rate
         model.compile(
-            optimizer=Adam(learning_rate=0.0001),
-            loss=CategoricalCrossentropy(label_smoothing=0.1),
+            optimizer=Adam(learning_rate=0.00005),  # Even lower learning rate for fine-tuning
+            loss=CategoricalCrossentropy(label_smoothing=0.2),
             metrics=['accuracy']
         )
         
@@ -178,7 +199,7 @@ def train_affectnet_improved(base_model_name='mobilenetv2', fine_tune=True):
         history2 = model.fit(
             X_train, y_train,
             batch_size=16,  # Smaller batch size for fine-tuning
-            epochs=30,
+            epochs=40,  # More epochs for fine-tuning
             initial_epoch=len(history1.history['accuracy']),
             validation_data=(X_val, y_val),
             callbacks=callbacks,
@@ -227,8 +248,8 @@ if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description='Train improved AffectNet model')
-    parser.add_argument('--model', type=str, default='mobilenetv2', 
-                        choices=['mobilenetv2', 'resnet50v2'],
+    parser.add_argument('--model', type=str, default='efficientnet', 
+                        choices=['mobilenetv2', 'efficientnet'],
                         help='Base model architecture')
     parser.add_argument('--no-fine-tune', action='store_true',
                         help='Skip fine-tuning phase')
