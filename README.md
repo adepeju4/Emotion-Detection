@@ -12,33 +12,6 @@ The project trains four different CNN models:
 
 Each model is evaluated on all datasets to compare performance and generalization capabilities.
 
-## Project Structure 
-
-emotion_detection/
-├── config.py # Configuration parameters
-├── main.py # Main script to run the entire project
-├── data_preprocessing/ # Data preprocessing modules
-│ ├── init.py
-│ ├── preprocess.py # Functions to load and preprocess datasets
-│ └── data_generator.py # Data generators for training
-├── models/ # Model definitions
-│ ├── init.py
-│ └── cnn_model.py # CNN architectures
-├── train/ # Training scripts
-│ ├── init.py
-│ ├── train_fer2013.py # Script to train on FER2013
-│ ├── train_ckplus.py # Script to train on CK+
-│ ├── train_affectnet.py # Script to train on AffectNet
-│ └── train_combined.py # Script to train on combined dataset
-├── utils/ # Utility functions
-│ ├── init.py
-│ ├── visualization.py # Visualization tools
-│ └── metrics.py # Evaluation metrics
-└── datasets/ # Dataset directories
-├── Fer2013/
-├── CK+/
-└── Affectnet/
-
 
 ## Requirements
 
@@ -64,28 +37,29 @@ The project expects datasets to be organized in the following structure:
 
 ### FER2013
 
+```
 datasets/Fer2013/
 ├── train/
-│ ├── angry/
-│ ├── disgust/
-│ ├── fear/
-│ ├── happy/
-│ ├── neutral/
-│ ├── sad/
-│ └── surprise/
+│   ├── angry/
+│   ├── disgust/
+│   ├── fear/
+│   ├── happy/
+│   ├── neutral/
+│   ├── sad/
+│   └── surprise/
 └── test/
-├── angry/
-├── disgust/
-├── fear/
-├── happy/
-├── neutral/
-├── sad/
-└── surprise/
-
-
+    ├── angry/
+    ├── disgust/
+    ├── fear/
+    ├── happy/
+    ├── neutral/
+    ├── sad/
+    └── surprise/
+```
 
 ### CK+
 
+```
 datasets/CK+/
 ├── anger/
 ├── contempt/
@@ -94,10 +68,11 @@ datasets/CK+/
 ├── happy/
 ├── sadness/
 └── surprise/
-
+```
 
 ### AffectNet
 
+```
 datasets/Affectnet/
 ├── anger/
 ├── contempt/
@@ -106,8 +81,10 @@ datasets/Affectnet/
 ├── happy/
 ├── neutral/
 ├── sad/
-└── surprise/
-├── labels.csv
+├── surprise/
+└── labels.csv
+```
+
 
 
 ## Usage
@@ -159,6 +136,6 @@ The standard CNN architecture includes:
 
 ## Acknowledgments
 
-- FER2013 dataset: [Kaggle](https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data)
+- FER2013 dataset: [Kaggle](https://www.kaggle.com/datasets/astraszab/facial-expression-dataset-image-folders-fer2013)
 - CK+ dataset: [Lucey et al.](http://www.pitt.edu/~emotion/ck-spread.html)
 - AffectNet dataset: [Mollahosseini et al.](http://mohammadmahoor.com/affectnet/)
