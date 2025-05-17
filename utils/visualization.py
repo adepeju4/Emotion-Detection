@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 import tensorflow as tf
-import cv2
 import config
 
 def plot_all_datasets_distribution():
     """
     Plot emotion distribution for all datasets and save the plots
     """
-    # Create directory for plots if it doesn't exist
-    os.makedirs('plots', exist_ok=True)
+    # Create directory for distribution plots
+    os.makedirs('plots/distributions', exist_ok=True)
     
     # Save original emotion classes
     original_emotion_classes = config.EMOTION_CLASSES
@@ -51,7 +50,7 @@ def plot_all_datasets_distribution():
                         f'{int(height)}', ha='center', va='bottom')
             
             plt.tight_layout()
-            plt.savefig('plots/fer2013_distribution.png')
+            plt.savefig('plots/distributions/fer2013_distribution.png')
             plt.close()
     except Exception as e:
         print(f"Error plotting FER2013 distribution: {e}")
@@ -90,7 +89,7 @@ def plot_all_datasets_distribution():
                         f'{int(height)}', ha='center', va='bottom')
             
             plt.tight_layout()
-            plt.savefig('plots/ckplus_distribution.png')
+            plt.savefig('plots/distributions/ckplus_distribution.png')
             plt.close()
     except Exception as e:
         print(f"Error plotting CK+ distribution: {e}")
@@ -129,7 +128,7 @@ def plot_all_datasets_distribution():
                         f'{int(height)}', ha='center', va='bottom')
             
             plt.tight_layout()
-            plt.savefig('plots/affectnet_distribution.png')
+            plt.savefig('plots/distributions/affectnet_distribution.png')
             plt.close()
     except Exception as e:
         print(f"Error plotting AffectNet distribution: {e}")
@@ -138,7 +137,7 @@ def plot_all_datasets_distribution():
     config.EMOTION_CLASSES = original_emotion_classes
     config.NUM_CLASSES = len(config.EMOTION_CLASSES)
     
-    print("All distribution plots saved to 'plots' directory")
+    print("All distribution plots saved to 'plots/distributions' directory")
 
 def plot_confusion_matrix(y_true, y_pred, class_names=config.EMOTION_CLASSES):
     """Plot confusion matrix for model evaluation"""

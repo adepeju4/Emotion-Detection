@@ -167,173 +167,130 @@ def load_ckplus():
     return (X_train, y_train), (X_val, y_val)
 
 def load_affectnet():
-    """Load and preprocess the AffectNet dataset"""
+    """Load and preprocess the AffectNet dataset from Kaggle format"""
     print("Loading AffectNet dataset...")
     
     # Check if the directory exists
     if not os.path.exists(config.AFFECTNET_DIR):
         print(f"Error: AffectNet directory not found at {config.AFFECTNET_DIR}")
-        print("Please download the dataset and extract it to this location.")
-        # Return empty arrays to avoid crashing the program
         return (np.array([]), np.array([])), (np.array([]), np.array([]))
     
-    # Check for CSV file with annotations
-    csv_path = os.path.join(config.AFFECTNET_DIR, 'annotations.csv')
-    if not os.path.exists(csv_path):
-        # Try alternative filenames
-        alternative_paths = [
-            os.path.join(config.AFFECTNET_DIR, 'affectnet_annotations.csv'),
-            os.path.join(config.AFFECTNET_DIR, 'metadata.csv'),
-            os.path.join(config.AFFECTNET_DIR, 'labels.csv')
-        ]
-        
-        for alt_path in alternative_paths:
-            if os.path.exists(alt_path):
-                csv_path = alt_path
-                break
-        else:
-            print(f"Error: AffectNet annotations file not found.")
-            print("Please make sure the dataset includes a CSV file with image paths and emotion labels.")
-            # Return empty arrays to avoid crashing the program
-            return (np.array([]), np.array([])), (np.array([]), np.array([]))
+    train_dir = os.path.join(config.AFFECTNET_DIR, 'Train')
+    test_dir = os.path.join(config.AFFECTNET_DIR, 'Test')
     
-    # Load annotations
-    try:
-        df = pd.read_csv(csv_path)
-        print(f"Loaded AffectNet annotations with {len(df)} entries")
-        
-        # Print column names for debugging
-        print(f"Available columns in CSV: {df.columns.tolist()}")
-        
-        # Determine the image path column name
-        path_column = None
-        possible_path_columns = ['path', 'image', 'file', 'filename', 'subDirectory_filePath', 'pth']
-        for col in possible_path_columns:
-            if col in df.columns:
-                path_column = col
-                print(f"Using '{path_column}' as the image path column")
-                break
-        
-        if path_column is None:
-            print("Error: Could not find image path column in CSV file")
-            print(f"Available columns: {df.columns.tolist()}")
-            # Return empty arrays to avoid crashing the program
-            return (np.array([]), np.array([])), (np.array([]), np.array([]))
-        
-        # Determine the emotion column name
-        emotion_column = None
-        possible_emotion_columns = ['emotion', 'expression', 'label', 'class', 'expression_label']
-        for col in possible_emotion_columns:
-            if col in df.columns:
-                emotion_column = col
-                print(f"Using '{emotion_column}' as the emotion column")
-                break
-        
-        if emotion_column is None:
-            print("Error: Could not find emotion column in CSV file")
-            print(f"Available columns: {df.columns.tolist()}")
-            # Return empty arrays to avoid crashing the program
-            return (np.array([]), np.array([])), (np.array([]), np.array([]))
-        
-        # Process images and labels
-        images = []
-        labels = []
-        
-        # Map AffectNet emotion codes to our standardized labels
-        emotion_map = config.EMOTION_MAPPING['affectnet']
-        
-        # Get list of valid emotions for this dataset
-        valid_emotions = config.AFFECTNET_EMOTIONS
-        
-        # Process each row in the CSV
-        for idx, row in df.iterrows():
-            try:
-                # Get image path
-                img_path = os.path.join(config.AFFECTNET_DIR, row[path_column])
-                
-                # Check if file exists
-                if not os.path.exists(img_path):
-                    # Try looking in subdirectories
-                    if os.path.exists(os.path.join(config.AFFECTNET_DIR, 'images', row[path_column])):
-                        img_path = os.path.join(config.AFFECTNET_DIR, 'images', row[path_column])
-                    else:
-                        print(f"Warning: Image file not found: {img_path}")
-                        continue
-                
-                # Get emotion label
-                emotion = row[emotion_column]
-                
-                # Convert to standardized emotion label if needed
-                if isinstance(emotion, str) and emotion in emotion_map:
-                    emotion = emotion_map[emotion]
-                elif isinstance(emotion, (int, float)):
-                    # If emotion is a number, map it to the corresponding emotion
-                    emotion_idx = int(emotion)
-                    if emotion_idx < len(valid_emotions):
-                        emotion = valid_emotions[emotion_idx]
-                    else:
-                        print(f"Warning: Unknown emotion index: {emotion_idx}")
-                        continue
-                
-                # Skip if emotion is not in our list
-                if emotion not in valid_emotions:
-                    continue
-                
-                # Load and preprocess image
-                img = cv2.imread(img_path)
-                if img is None:
-                    print(f"Warning: Could not read image: {img_path}")
-                    continue
-                
-                # Convert to grayscale if needed
-                if config.IMG_CHANNELS == 1:
-                    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                
-                # Resize image
-                img = cv2.resize(img, (config.IMG_SIZE, config.IMG_SIZE))
-                
-                # Normalize pixel values
-                img = img / 255.0
-                
-                # Add channel dimension if grayscale
-                if config.IMG_CHANNELS == 1:
-                    img = np.expand_dims(img, axis=-1)
-                
-                # Add to lists
-                images.append(img)
-                
-                # One-hot encode the label
-                label = np.zeros(len(valid_emotions))
-                label[valid_emotions.index(emotion)] = 1
-                labels.append(label)
-                
-                # Print progress
-                if (idx + 1) % 1000 == 0:
-                    print(f"Processed {idx + 1} images")
+    # Verify directory structure
+    if not (os.path.exists(train_dir) and os.path.exists(test_dir)):
+        print(f"Error: Expected Train and Test directories not found in {config.AFFECTNET_DIR}")
+        return (np.array([]), np.array([])), (np.array([]), np.array([]))
+    
+    # Process training data
+    train_data = []
+    train_labels = []
+    print("Processing training data...")
+    
+    for emotion in os.listdir(train_dir):
+        if emotion.startswith('.'):  # Skip hidden files
+            continue
             
-            except Exception as e:
-                print(f"Error processing row {idx}: {e}")
+        emotion_dir = os.path.join(train_dir, emotion)
+        if not os.path.isdir(emotion_dir):
+            continue
+            
+        # Map the emotion to standardized label
+        std_emotion = config.EMOTION_MAPPING['affectnet'].get(emotion)
+        if std_emotion not in config.AFFECTNET_EMOTIONS:
+            continue
+            
+        emotion_idx = config.AFFECTNET_EMOTIONS.index(std_emotion)
+        print(f"Processing {emotion} (maps to {std_emotion}, index {emotion_idx})")
+        
+        for img_file in os.listdir(emotion_dir):
+            if not img_file.endswith(('.jpg', '.jpeg', '.png')):
                 continue
-        
-        # Convert lists to numpy arrays
-        X = np.array(images)
-        y = np.array(labels)
-        
-        print(f"Loaded {len(X)} images from AffectNet dataset")
-        
-        # Split into train and validation sets
-        split_idx = int(len(X) * (1 - config.VALIDATION_SPLIT))
-        X_train, X_val = X[:split_idx], X[split_idx:]
-        y_train, y_val = y[:split_idx], y[split_idx:]
-        
-        return (X_train, y_train), (X_val, y_val)
+                
+            img_path = os.path.join(emotion_dir, img_file)
+            img = cv2.imread(img_path)
+            
+            if img is None:
+                continue
+                
+            # Convert to grayscale if needed
+            if config.IMG_CHANNELS == 1:
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            
+            # Resize image
+            img = cv2.resize(img, (config.IMG_SIZE, config.IMG_SIZE))
+            
+            # Normalize pixel values
+            img = img / 255.0
+            
+            # Add channel dimension if grayscale
+            if config.IMG_CHANNELS == 1:
+                img = np.expand_dims(img, axis=-1)
+            
+            train_data.append(img)
+            train_labels.append(emotion_idx)
     
-    except Exception as e:
-        print(f"Error loading AffectNet dataset: {e}")
-        import traceback
-        traceback.print_exc()
-        # Return empty arrays to avoid crashing the program
-        return (np.array([]), np.array([])), (np.array([]), np.array([]))
+    # Process test data
+    test_data = []
+    test_labels = []
+    print("Processing test data...")
+    
+    for emotion in os.listdir(test_dir):
+        if emotion.startswith('.'):  # Skip hidden files
+            continue
+            
+        emotion_dir = os.path.join(test_dir, emotion)
+        if not os.path.isdir(emotion_dir):
+            continue
+            
+        # Map the emotion to standardized label
+        std_emotion = config.EMOTION_MAPPING['affectnet'].get(emotion)
+        if std_emotion not in config.AFFECTNET_EMOTIONS:
+            continue
+            
+        emotion_idx = config.AFFECTNET_EMOTIONS.index(std_emotion)
+        print(f"Processing {emotion} (maps to {std_emotion}, index {emotion_idx})")
+        
+        for img_file in os.listdir(emotion_dir):
+            if not img_file.endswith(('.jpg', '.jpeg', '.png')):
+                continue
+                
+            img_path = os.path.join(emotion_dir, img_file)
+            img = cv2.imread(img_path)
+            
+            if img is None:
+                continue
+                
+            # Convert to grayscale if needed
+            if config.IMG_CHANNELS == 1:
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            
+            # Resize image
+            img = cv2.resize(img, (config.IMG_SIZE, config.IMG_SIZE))
+            
+            # Normalize pixel values
+            img = img / 255.0
+            
+            # Add channel dimension if grayscale
+            if config.IMG_CHANNELS == 1:
+                img = np.expand_dims(img, axis=-1)
+            
+            test_data.append(img)
+            test_labels.append(emotion_idx)
+    
+    # Convert to numpy arrays
+    X_train = np.array(train_data)
+    y_train = to_categorical(np.array(train_labels), num_classes=len(config.AFFECTNET_EMOTIONS))
+    
+    X_test = np.array(test_data)
+    y_test = to_categorical(np.array(test_labels), num_classes=len(config.AFFECTNET_EMOTIONS))
+    
+    print(f"Loaded {len(X_train)} training images and {len(X_test)} test images")
+    print(f"Training data shape: {X_train.shape}")
+    print(f"Test data shape: {X_test.shape}")
+    
+    return (X_train, y_train), (X_test, y_test)
 
 def load_combined_dataset():
     """Load and combine all three datasets"""

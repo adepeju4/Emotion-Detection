@@ -1,6 +1,5 @@
 import os
 import sys
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 import matplotlib.pyplot as plt
@@ -9,7 +8,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 from data_preprocessing.preprocess import load_fer2013, apply_data_augmentation
-from models.cnn_model import create_emotion_model
+from architecture.cnn_architecture import create_emotion_model
 
 def train_fer2013_model():
     """Train a model on the FER2013 dataset"""
@@ -56,6 +55,13 @@ def train_fer2013_model():
         )
     ]
     
+    # Compile model with legacy Adam optimizer for better M1/M2 Mac performance
+    model.compile(
+        optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=config.LEARNING_RATE),
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    
     # Train the model
     print("Training model...")
     history = model.fit(
@@ -92,7 +98,7 @@ def train_fer2013_model():
     plt.legend(['Train', 'Validation'], loc='upper left')
     
     plt.tight_layout()
-    plt.savefig('fer2013_training_history.png')
+    plt.savefig('plots/training_history/fer2013_training_history.png')
     plt.close()
     
     return model, history

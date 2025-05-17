@@ -15,7 +15,7 @@ IMG_CHANNELS = 1  # Grayscale
 
 # Training parameters
 BATCH_SIZE = 64
-EPOCHS = 50
+EPOCHS = 50  # Changed back to 50 epochs for proper training
 LEARNING_RATE = 1e-4
 VALIDATION_SPLIT = 0.2
 

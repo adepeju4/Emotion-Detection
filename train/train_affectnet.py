@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 from data_preprocessing.preprocess import load_affectnet, apply_data_augmentation
-from models.cnn_model import create_emotion_model
+from architecture.cnn_architecture import create_emotion_model
 
 def train_affectnet_model():
     """Train a model on the AffectNet dataset"""
@@ -48,7 +48,7 @@ def train_affectnet_model():
     
     # Compile model
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=config.LEARNING_RATE),
+        optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=config.LEARNING_RATE),
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )
@@ -116,7 +116,7 @@ def train_affectnet_model():
     plt.legend(['Train', 'Validation'], loc='upper left')
     
     plt.tight_layout()
-    plt.savefig('affectnet_training_history.png')
+    plt.savefig('plots/training_history/affectnet_training_history.png')
     plt.close()
     
     return model, history

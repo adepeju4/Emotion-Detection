@@ -1,6 +1,5 @@
 import os
 import sys
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 import matplotlib.pyplot as plt
@@ -9,7 +8,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 from data_preprocessing.preprocess import load_combined_dataset, apply_data_augmentation
-from models.cnn_model import create_emotion_model
+from architecture.cnn_architecture import create_emotion_model
 
 def train_combined_model():
     """Train a model on the combined dataset (FER2013 + CK+ + AffectNet)"""

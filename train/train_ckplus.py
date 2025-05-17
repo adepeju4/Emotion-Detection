@@ -1,6 +1,5 @@
 import os
 import sys
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, ReduceLROnPlateau
 import matplotlib.pyplot as plt
@@ -9,7 +8,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import config
 from data_preprocessing.preprocess import load_ckplus, apply_data_augmentation
-from models.cnn_model import create_lightweight_model, create_emotion_model
+from architecture.cnn_architecture import create_emotion_model
 
 def train_ckplus_model():
     """Train a model on the CK+ dataset"""
@@ -66,6 +65,13 @@ def train_ckplus_model():
         )
     ]
     
+    # Compile model with legacy Adam optimizer for better M1/M2 Mac performance
+    model.compile(
+        optimizer=tf.keras.optimizers.legacy.Adam(learning_rate=config.LEARNING_RATE),
+        loss='categorical_crossentropy',
+        metrics=['accuracy']
+    )
+    
     # Train the model
     print("Training model...")
     history = model.fit(
@@ -102,7 +108,7 @@ def train_ckplus_model():
     plt.legend(['Train', 'Validation'], loc='upper left')
     
     plt.tight_layout()
-    plt.savefig('ckplus_training_history.png')
+    plt.savefig('plots/training_history/ckplus_training_history.png')
     plt.close()
     
     return model, history

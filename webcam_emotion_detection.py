@@ -7,10 +7,12 @@ import sys
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import argparse
+from tensorflow.keras.models import load_model
 
 # Add the project root to the path so we can import config
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 import config
+from utils.preprocessing import preprocess_face_for_emotion
 
 # Print emotion classes for debugging
 print(f"Emotion classes from config: {config.EMOTION_CLASSES}")
@@ -649,19 +651,129 @@ def run_single_model_detection(model_name):
         for i, emotion in enumerate(emotion_classes):
             print(f"{emotion}: {predictions[0][i]:.6f}")
 
+def get_emotion_model(model_path):
+    """Load the emotion detection model"""
+    if not os.path.exists(model_path):
+        print(f"Error: Model file not found at {model_path}")
+        sys.exit(1)
+        
+    model = load_model(model_path)
+    return model
+
+def get_emotion_labels(model_name):
+    """Get the appropriate emotion labels based on the model"""
+    if 'fer2013' in model_name.lower():
+        return config.FER2013_EMOTIONS
+    elif 'ckplus' in model_name.lower():
+        return config.CKPLUS_EMOTIONS
+    elif 'affectnet' in model_name.lower():
+        return config.AFFECTNET_EMOTIONS
+    else:
+        return config.EMOTION_CLASSES
+
+def apply_emotion_smoothing(emotion_window, current_prediction):
+    """Apply temporal smoothing to emotion predictions"""
+    # Add current prediction to window
+    emotion_window.append(current_prediction)
+    
+    # Keep only the last 5 predictions
+    if len(emotion_window) > 5:
+        emotion_window.pop(0)
+    
+    # Average the predictions
+    avg_prediction = np.mean(np.array(emotion_window), axis=0)
+    return avg_prediction
+
+def detect_emotions_webcam(model_path):
+    """Run emotion detection on webcam feed"""
+    # Load face cascade
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+    
+    # Load emotion model
+    model = get_emotion_model(model_path)
+    emotion_labels = get_emotion_labels(os.path.basename(model_path))
+    
+    # Initialize webcam
+    cap = cv2.VideoCapture(0)
+    
+    # For temporal smoothing
+    emotion_window = []
+    
+    while True:
+        # Capture frame-by-frame
+        ret, frame = cap.read()
+        if not ret:
+            break
+            
+        # Create a copy for display
+        display_frame = frame.copy()
+        
+        # Convert to grayscale for face detection
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        
+        # Detect faces
+        faces = face_cascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30)
+        )
+        
+        # Process each face
+        for (x, y, w, h) in faces:
+            # Extract face region with some margin
+            face_roi = gray[y:y+h, x:x+w]
+            
+            # Preprocess face for emotion detection
+            processed_face = preprocess_face_for_emotion(face_roi)
+            
+            # Make prediction
+            prediction = model.predict(np.expand_dims(processed_face, axis=0))[0]
+            
+            # Apply temporal smoothing
+            smoothed_prediction = apply_emotion_smoothing(emotion_window, prediction)
+            
+            # Get emotion label
+            emotion_idx = np.argmax(smoothed_prediction)
+            emotion_text = emotion_labels[emotion_idx]
+            confidence = smoothed_prediction[emotion_idx] * 100
+            
+            # Draw rectangle around face
+            cv2.rectangle(display_frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            
+            # Display emotion text
+            text = f"{emotion_text}: {confidence:.1f}%"
+            cv2.putText(display_frame, text, (x, y-10), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+            
+            # Display all emotion probabilities
+            for i, (emotion, prob) in enumerate(zip(emotion_labels, smoothed_prediction)):
+                bar_width = int(prob * 100)
+                cv2.rectangle(display_frame, 
+                             (10, 50 + i*20), 
+                             (10 + bar_width, 70 + i*20), 
+                             (0, 255, 0), 
+                             -1)
+                cv2.putText(display_frame, f"{emotion}: {prob*100:.1f}%", 
+                           (120, 65 + i*20), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Display the resulting frame
+        cv2.imshow('Emotion Detection', display_frame)
+        
+        # Break loop on 'q' key press
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    # Release resources
+    cap.release()
+    cv2.destroyAllWindows()
+
 if __name__ == "__main__":
     # Create argument parser
     parser = argparse.ArgumentParser(description='Emotion Detection Webcam Demo')
-    parser.add_argument('--model', type=str, default='fer2013', 
-                        choices=['fer2013', 'ckplus', 'affectnet', 'combined'],
-                        help='Which model to use for detection')
+    parser.add_argument('--model', type=str, default='saved_models/affectnet_simple_model.h5',
+                       help='Path to emotion detection model')
+    
     args = parser.parse_args()
-    
-    # Set the selected model based on command-line argument
-    SELECTED_MODEL = args.model
-    
-    print(f"Starting Emotion Detection Webcam Demo with {SELECTED_MODEL} model")
-    print(f"Detected emotion classes: {config.EMOTION_CLASSES}")
-    
-    # Run webcam detection with a single model
-    run_single_model_detection(SELECTED_MODEL)
+    detect_emotions_webcam(args.model)

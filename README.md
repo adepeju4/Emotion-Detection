@@ -137,5 +137,5 @@ The standard CNN architecture includes:
 ## Acknowledgments
 
 - FER2013 dataset: [Kaggle](https://www.kaggle.com/datasets/astraszab/facial-expression-dataset-image-folders-fer2013)
-- CK+ dataset: [Lucey et al.](http://www.pitt.edu/~emotion/ck-spread.html)
-- AffectNet dataset: [Mollahosseini et al.](http://mohammadmahoor.com/affectnet/)
+- CK+ dataset: [Papers With Code](https://www.paperswithcode.com/dataset/ck)
+- AffectNet dataset: [Kaggle](https://www.kaggle.com/datasets/mstjebashazida/affectnet?select=archive+%283%29)
