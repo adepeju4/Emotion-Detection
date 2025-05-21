@@ -78,7 +78,7 @@ data/Affectnet/
 ├── surprise/
 └── labels.csv
 ```
-
+These datasets can be downloaded at the sources listed at the end of this Readme file.
 
 
 ## Usage
@@ -128,7 +128,7 @@ The standard CNN architecture includes:
 [MIT License](LICENSE)
 
 ## Acknowledgments
-
+- Basic CNN architecture inspired by [Skillcate](https://medium.com/@skillcate/emotion-detection-model-using-cnn-a-complete-guide-831db1421fae)
 - FER2013 dataset: [Kaggle](https://www.kaggle.com/datasets/astraszab/facial-expression-dataset-image-folders-fer2013)
 - CK+ dataset: [Papers With Code](https://www.paperswithcode.com/dataset/ck)
 - AffectNet dataset: [Kaggle](https://www.kaggle.com/datasets/mstjebashazida/affectnet?select=archive+%283%29)
