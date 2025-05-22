@@ -111,6 +111,22 @@ The project generates:
 - Sample prediction visualizations
 - Comprehensive performance metrics including accuracy, precision, recall, and F1-score
 
+### Model Performance
+
+Our models achieved the following accuracies:
+
+| Dataset   | Accuracy | Details                                                |
+|-----------|----------|--------------------------------------------------------|
+| FER2013   | 59%      | Trained on grayscale images (48x48), 7 emotion classes |
+| CK+       | 100%     | Laboratory-controlled dataset, 7 emotion classes       |
+| AffectNet | 62.5%    | Real-world conditions, 8 emotion classes               |
+
+Note: These results were achieved using:
+- Standard CNN architecture for FER2013 and AffectNet
+- Lightweight CNN architecture for CK+
+- Basic preprocessing only (grayscale conversion, resize to 48x48, normalization)
+- Models trained from scratch (no transfer learning)
+
 ## Model Architecture
 
 The project implements two CNN architectures:
