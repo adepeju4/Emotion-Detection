@@ -62,9 +62,14 @@ htmlcov/
 .env
 .env.local
 .env.*.local
+# Allow .env.example as a template
+!.env.example
+!client/.env.example
 config.ini
 secrets.yaml
 
+venv
+.venv
 # Documentation
 docs/_build/
 site/
@@ -78,3 +83,16 @@ site/
 !results/
 !results/**/*.png
 !results/**/*.pdf 
+
+# Client
+client/node_modules
+client/logs
+client/logs/*.log
+client/.vscode/*
+client/.idea
+client/.DS_Store
+client/*.suo
+client/*.ntvs*
+client/*.njsproj
+client/*.sln
+client/*.sw?

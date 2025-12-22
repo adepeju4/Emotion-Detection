@@ -2,6 +2,7 @@ import os
 import logging
 import tensorflow as tf
 from datetime import datetime
+import sys
 
 
 from src.train_fer2013 import train_fer2013
@@ -139,4 +140,7 @@ def main():
     logger.info("Pipeline execution completed")
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "train":
+        main()
+    else:
+        main()
