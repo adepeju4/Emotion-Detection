@@ -2,32 +2,32 @@ import { Link } from "react-router-dom";
 
 export default function Research() {
   return (
-    <div className="min-h-screen bg-white py-24">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white py-16 sm:py-20 md:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <article className="prose prose-lg prose-gray max-w-none">
-          <header className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Research Methodology & Findings</h1>
-            <p className="text-xl text-gray-600 mb-6">Empirical comparison of convolutional neural networks for facial emotion recognition</p>
-            <div className="flex items-center text-sm text-gray-500 mb-8">
+          <header className="mb-8 sm:mb-12">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Research Methodology & Findings</h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6">Empirical comparison of convolutional neural networks for facial emotion recognition</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8">
               <span>By Adepeju Peace Orefejo</span>
-              <span className="mx-2">•</span>
+              <span className="hidden sm:inline mx-2">•</span>
               <span>MSc. Software Engineering 2025</span>
         </div>
           </header>
 
-          <section className="mb-20">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Abstract</h2>
-            <p className="text-gray-700 mb-6">
+          <section className="mb-12 sm:mb-16 md:mb-20">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">Abstract</h2>
+            <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
               This research presents an empirical comparison of convolutional neural network architectures for facial emotion recognition across three benchmark datasets: FER2013, CK+, and AffectNet. The study evaluates model performance, architectural differences, and practical implications for autism support applications.
             </p>
-            <p className="text-gray-700 mb-6">
+            <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
               Our findings demonstrate significant performance variations across datasets, with CK+ achieving perfect accuracy (100.00%) in controlled conditions, AffectNet reaching 62.51% in real-world scenarios, and FER2013 achieving 54.67% test accuracy. The research provides insights into the challenges of emotion recognition across different data conditions and the potential for AI-assisted support tools.
             </p>
           </section>
         
-        <section className="mb-20">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Datasets</h2>
-            <p className="text-gray-700 mb-6">
+        <section className="mb-12 sm:mb-16 md:mb-20">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">Datasets</h2>
+            <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
               Three publicly available datasets were selected to evaluate model performance across different data characteristics and emotion categories.
             </p>
             

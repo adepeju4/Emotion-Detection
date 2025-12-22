@@ -138,32 +138,32 @@ export default function UploadPhoto() {
   }, [handleImageUpload]);
 
   return (
-    <div className="min-h-screen bg-white py-24">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white py-16 sm:py-20 md:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <article className="prose prose-lg prose-gray max-w-none">
-          <header className="mb-12">
-            <div className="flex items-center gap-4 mb-6">
+          <header className="mb-8 sm:mb-12">
+            <div className="flex items-center gap-4 mb-4 sm:mb-6">
               <Link to="/" className="text-gray-500 hover:text-gray-700">
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </Link>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Photo Emotion Analysis</h1>
-            <p className="text-xl text-gray-600 mb-6">Upload a photo to detect emotions using AI-powered facial analysis</p>
-            <div className="flex items-center text-sm text-gray-500 mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Photo Emotion Analysis</h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6">Upload a photo to detect emotions using AI-powered facial analysis</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8">
               <span>By Adepeju Peace Orefejo</span>
-              <span className="mx-2">•</span>
+              <span className="hidden sm:inline mx-2">•</span>
               <span>MSc. Software Engineering 2025</span>
             </div>
           </header>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Upload & Analyze Photo</h2>
-            <p className="text-gray-700 mb-8">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-8">Upload & Analyze Photo</h2>
+            <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8">
               Upload a photo to analyze emotions using state-of-the-art deep learning models. The system will automatically detect faces and provide detailed emotion analysis with confidence scores.
             </p>
             
               
-            <div className="bg-amber-50 border-l-4 border-amber-400 p-6 mb-8">
+            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 sm:p-6 mb-6 sm:mb-8">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
@@ -186,9 +186,9 @@ export default function UploadPhoto() {
             </div>
           </section>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            <Card className="p-8 border border-gray-200 shadow-sm">
-              <h3 className="text-xl font-semibold mb-6 text-gray-900">Upload Photo</h3>
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
+            <Card className="p-4 sm:p-6 md:p-8 border border-gray-200 shadow-sm">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-900">Upload Photo</h3>
             
 
             <div className="relative">
@@ -200,9 +200,9 @@ export default function UploadPhoto() {
               </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <div
-                className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${
+                className={`border-2 border-dashed rounded-xl p-4 sm:p-6 md:p-8 text-center transition-all duration-300 ${
                   dragActive 
                     ? 'border-blue bg-blue-50 scale-105' 
                     : 'border-gray-300 hover:border-blue hover:bg-blue-50'
@@ -212,11 +212,11 @@ export default function UploadPhoto() {
                 onDragOver={handleDrag}
                 onDrop={handleDrop}
               >
-                <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-lg font-medium text-gray-700 mb-2">
+                <Upload className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+                <p className="text-sm sm:text-base md:text-lg font-medium text-gray-700 mb-2">
                   Drop your photo here, or click to browse
                 </p>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
                   Supports JPG, PNG files up to 15MB
                 </p>
                 <Button 
@@ -278,16 +278,16 @@ export default function UploadPhoto() {
             )}
           </Card>
 
-            <Card className="p-8 border border-gray-200 shadow-sm">
-              <h3 className="text-xl font-semibold mb-6 text-gray-900">Image Preview & Analysis</h3>
+            <Card className="p-4 sm:p-6 md:p-8 border border-gray-200 shadow-sm">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-900">Image Preview & Analysis</h3>
             
             {imageUrl ? (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="relative bg-black rounded-lg overflow-hidden">
                   <img
                     src={imageUrl}
                     alt="Preview"
-                    className="w-full h-64 object-contain"
+                    className="w-full h-48 sm:h-56 md:h-64 object-contain"
                     onError={(e) => {
                       setError("Failed to load image preview. The file may be corrupted or in an unsupported format.");
                       setImageUrl("");

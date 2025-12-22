@@ -14,44 +14,44 @@ export default function Home() {
   };
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <header className="max-w-6xl mx-auto py-16 md:py-24">
-        <h1 className="text-3xl md:text-5xl font-semibold leading-tight tracking-tight">
+      <header className="max-w-6xl mx-auto px-4 pt-20 sm:pt-24 md:pt-28 pb-12 sm:pb-16 md:pb-24">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight">
           EMOTION DETECTION FOR AUTISM SUPPORT
         </h1>
-        <p className="mt-3 text-sm md:text-base text-gray-700">Adepeju Peace Orefejo</p>
-        <p className="mt-1 text-sm text-gray-600">Big Academy UAE in partnership with Euclea Business School</p>
-        <p className="mt-1 text-sm text-gray-600">MSc. Software Engineering 2025</p>
+        <p className="mt-3 text-xs sm:text-sm md:text-base text-gray-700">Adepeju Peace Orefejo</p>
+        <p className="mt-1 text-xs sm:text-sm text-gray-600">Big Academy UAE in partnership with Euclea Business School</p>
+        <p className="mt-1 text-xs sm:text-sm text-gray-600">MSc. Software Engineering 2025</p>
       </header>
 
-      <nav className="sticky top-0 z-10 border-y bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
-        <div className="max-w-6xl mx-auto">
-          <ul className="flex gap-4 md:gap-6 py-2 md:py-3 text-sm overflow-x-auto whitespace-nowrap scrollbar-none">
-            <li><a href="#abstract" className="hover:underline">Abstract</a></li>
-            <li><a href="#datasets" className="hover:underline">Datasets</a></li>
-            <li><a href="#methods" className="hover:underline">Methodology</a></li>
-            <li><a href="#results" className="hover:underline">Results</a></li>
-            <li><a href="#code" className="hover:underline">Code</a></li>
-            <li><a href="#contact" className="hover:underline">Contact</a></li>
+      <nav className="sticky top-14 z-10 border-y bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+        <div className="max-w-6xl mx-auto px-4">
+          <ul className="flex gap-3 sm:gap-4 md:gap-6 py-2 md:py-3 text-xs sm:text-sm overflow-x-auto whitespace-nowrap scrollbar-none">
+            <li><a href="#abstract" className="hover:underline px-1">Abstract</a></li>
+            <li><a href="#datasets" className="hover:underline px-1">Datasets</a></li>
+            <li><a href="#methods" className="hover:underline px-1">Methodology</a></li>
+            <li><a href="#results" className="hover:underline px-1">Results</a></li>
+            <li><a href="#code" className="hover:underline px-1">Code</a></li>
+            <li><a href="#contact" className="hover:underline px-1">Contact</a></li>
           </ul>
         </div>
       </nav>
 
-      <section className="max-w-6xl mx-auto py-10 md:py-12">
-        <div className="grid md:grid-cols-2 gap-10 items-start">
+      <section className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12">
+        <div className="grid md:grid-cols-2 gap-6 md:gap-10 items-start">
           <div>
-            <p className="text-base md:text-lg leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed">
               This project presents an empirical comparison of convolutional baselines for facial emotion
               recognition across FER2013, CK+, and AffectNet. The site summarizes the problem space, datasets,
               baselines, and observed results without making performance claims or deployment promises.
             </p>
             <div className="mt-6 flex flex-col sm:flex-row gap-3">
               <a href="#code">
-                <Button variant="outline" className="border-gray-300 text-gray-900 hover:bg-gray-100">View Code</Button>
+                <Button variant="outline" className="border-gray-300 text-gray-900 hover:bg-gray-100 w-full sm:w-auto">View Code</Button>
               </a>
             </div>
           </div>
-          <div className="border rounded-lg p-4">
-            <div className="text-sm text-gray-600 mb-3">Emotion classes</div>
+          <div className="border rounded-lg p-3 sm:p-4">
+            <div className="text-xs sm:text-sm text-gray-600 mb-3">Emotion classes</div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs text-center">
               {[
                 'Anger',
@@ -77,9 +77,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="abstract" className="max-w-6xl mx-auto py-10 md:py-12 border-t">
-        <h2 className="text-2xl font-semibold mb-4">ABSTRACT</h2>
-        <p className="leading-relaxed text-gray-800">
+      <section id="abstract" className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12 border-t">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">ABSTRACT</h2>
+        <p className="text-sm sm:text-base leading-relaxed text-gray-800">
           This work presents an empirical study of convolutional baselines for facial emotion recognition in
           natural interactions. Models are trained on FER2013, CK+, and AffectNet. The study prioritises external
           validity over benchmark optimisation and documents the impact of dataset noise, posed vs. spontaneous
@@ -87,23 +87,23 @@ export default function Home() {
         </p>
       </section>
 
-      <section id="datasets" className="max-w-6xl mx-auto py-10 md:py-12 border-t">
-        <h2 className="text-2xl font-semibold mb-4">DATASETS</h2>
-        <ul className="list-disc pl-6 space-y-2 text-gray-800">
+      <section id="datasets" className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12 border-t">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">DATASETS</h2>
+        <ul className="list-disc pl-5 sm:pl-6 space-y-2 text-sm sm:text-base text-gray-800">
           <li>FER2013 — 48×48 grayscale, in-the-wild; noisy labels and class imbalance.</li>
           <li>CK+ — posed apex expressions; high accuracy but limited external validity.</li>
           <li>AffectNet — large-scale web images; diverse but label noise present.</li>
         </ul>
       </section>
 
-      <section id="methods" className="max-w-6xl mx-auto py-10 md:py-12 border-t">
-        <h2 className="text-2xl font-semibold mb-6">METHODOLOGY</h2>
-        <div className="space-y-6 text-gray-800">
-          <p className="text-lg leading-relaxed">
+      <section id="methods" className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12 border-t">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">METHODOLOGY</h2>
+        <div className="space-y-4 sm:space-y-6 text-sm sm:text-base text-gray-800">
+          <p className="text-base sm:text-lg leading-relaxed">
             Baselines follow a controlled pipeline to enable like-for-like comparisons across FER2013, CK+, and
             AffectNet. Choices emphasise reproducibility over peak benchmark scores.
           </p>
-          <ul className="list-disc pl-6 space-y-4">
+          <ul className="list-disc pl-5 sm:pl-6 space-y-3 sm:space-y-4">
             <li className="leading-relaxed">
               <span className="font-medium">Preprocessing:</span> face-cropped inputs resized to 48×48; grayscale
               conversion; pixel normalisation to [0,1]. No alignment beyond dataset-provided crops.
@@ -131,9 +131,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="results" className="max-w-6xl mx-auto py-10 md:py-12 border-t">
-        <h2 className="text-2xl font-semibold mb-4">RESULTS (SUMMARY)</h2>
-        <ul className="list-disc pl-6 space-y-2 text-gray-800">
+      <section id="results" className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12 border-t">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">RESULTS (SUMMARY)</h2>
+        <ul className="list-disc pl-5 sm:pl-6 space-y-2 text-sm sm:text-base text-gray-800">
           <li>CK+: near-ceiling on posed expressions; limited transfer to spontaneous affect.</li>
           <li>FER2013/AffectNet: modest overall accuracy; minority classes (e.g., disgust, contempt) underperform.</li>
           <li>Robustness sensitive to occlusion, pose, and illumination; higher-res RGB recommended.</li>
@@ -145,9 +145,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="code" className="max-w-6xl mx-auto py-10 md:py-12 border-t">
-        <h2 className="text-2xl font-semibold mb-4">CODE</h2>
-        <p className="text-gray-800 mb-4">Source code for training, evaluation, and the demo UI is organised under <code className="px-1 py-0.5 bg-gray-100 border rounded">src/</code> and <code className="px-1 py-0.5 bg-gray-100 border rounded">client/</code>. See Research for experimental details.</p>
+      <section id="code" className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12 border-t">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">CODE</h2>
+        <p className="text-sm sm:text-base text-gray-800 mb-4">Source code for training, evaluation, and the demo UI is organised under <code className="px-1 py-0.5 bg-gray-100 border rounded text-xs sm:text-sm">src/</code> and <code className="px-1 py-0.5 bg-gray-100 border rounded text-xs sm:text-sm">client/</code>. See Research for experimental details.</p>
         <div className="mt-4">
           <a 
             href="https://github.com/adepeju4/Emotion-Detection" 
@@ -163,9 +163,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="max-w-6xl mx-auto py-10 md:py-12 border-t">
-        <h2 className="text-2xl font-semibold mb-4">CONTACT</h2>
-        <p className="text-gray-800">For correspondence, please use the contact link in the site navigation.</p>
+      <section id="contact" className="max-w-6xl mx-auto px-4 py-8 sm:py-10 md:py-12 border-t">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4">CONTACT</h2>
+        <p className="text-sm sm:text-base text-gray-800">For correspondence, please use the contact link in the site navigation.</p>
       </section>
     </div>
   );

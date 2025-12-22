@@ -223,32 +223,32 @@ export default function WebcamAnalysis() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white py-24">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white py-16 sm:py-20 md:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <article className="prose prose-lg prose-gray max-w-none">
-          <header className="mb-12">
-            <div className="flex items-center gap-4 mb-6">
+          <header className="mb-8 sm:mb-12">
+            <div className="flex items-center gap-4 mb-4 sm:mb-6">
               <Link to="/" className="text-gray-500 hover:text-gray-700">
-                <ArrowLeft className="w-6 h-6" />
+                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
               </Link>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Real-Time Webcam Analysis</h1>
-            <p className="text-xl text-gray-600 mb-6">Analyze emotions in real-time using your webcam</p>
-            <div className="flex items-center text-sm text-gray-500 mb-8">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Real-Time Webcam Analysis</h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6">Analyze emotions in real-time using your webcam</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8">
               <span>By Adepeju Peace Orefejo</span>
-              <span className="mx-2">•</span>
+              <span className="hidden sm:inline mx-2">•</span>
               <span>MSc. Software Engineering 2025</span>
             </div>
           </header>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Live Emotion Detection</h2>
-            <p className="text-gray-700 mb-8">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-8">Live Emotion Detection</h2>
+            <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8">
               Use your webcam to capture and analyze emotions in real-time. The system will detect faces and provide detailed emotion analysis with confidence scores.
             </p>
             
             
-            <div className="bg-amber-50 border-l-4 border-amber-400 p-6 mb-8">
+            <div className="bg-amber-50 border-l-4 border-amber-400 p-4 sm:p-6 mb-6 sm:mb-8">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-amber-400" viewBox="0 0 20 20" fill="currentColor">

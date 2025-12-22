@@ -23,24 +23,22 @@ export default function Emotions() {
   });
 
   return (
-    <div className="min-h-screen bg-white py-6">
-      <div className=" px-4">
-
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center min-h-[calc(100vh-3rem)]">
-          <div className="bg-white rounded-lg p-6">
-            <div className="flex justify-center items-center">
+    <div className="min-h-screen bg-white py-6 sm:py-8">
+      <div className="px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start lg:items-center min-h-[calc(100vh-3rem)]">
+          <div className="bg-white rounded-lg p-4 sm:p-6">
+            <div className="flex justify-center items-center overflow-x-auto">
               <Sunburst onSelect={handleEmotionSelect} />
             </div>
           </div>
 
-          <div className="bg-white rounded-lg p-6">
+          <div className="bg-white rounded-lg p-4 sm:p-6">
             {selectedEmotion ? (
               <div className="space-y-6">
                 <div className="border-b pb-4">
                   <div className="flex items-center mb-3">
-                    {emotionDef?.icon && <span className="text-4xl mr-4">{emotionDef.icon}</span>}
-                    <h2 className="text-3xl font-bold text-gray-900">{selectedEmotion}</h2>
+                    {emotionDef?.icon && <span className="text-2xl sm:text-3xl md:text-4xl mr-3 sm:mr-4">{emotionDef.icon}</span>}
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 break-words">{selectedEmotion}</h2>
                   </div>
                 </div>
 
@@ -138,15 +136,15 @@ export default function Emotions() {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🎯</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Select an Emotion</h3>
-                <p className="text-gray-600 mb-6">
+              <div className="text-center py-8 sm:py-12">
+                <div className="text-4xl sm:text-6xl mb-4">🎯</div>
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Select an Emotion</h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
                   Click on any segment of the emotion wheel to see its definition and details.
                 </p>
-                <div className="bg-gray-50 rounded-lg p-6 text-left">
-                  <h4 className="font-semibold text-gray-900 mb-3">How to Use This Tool</h4>
-                  <ul className="list-disc pl-6 space-y-2 text-sm text-gray-700">
+                <div className="bg-gray-50 rounded-lg p-4 sm:p-6 text-left">
+                  <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-3">How to Use This Tool</h4>
+                  <ul className="list-disc pl-5 sm:pl-6 space-y-2 text-xs sm:text-sm text-gray-700">
                     <li>Click on any segment of the wheel to zoom into that emotion category</li>
                     <li>Explore sub-emotions and their relationships</li>
                     <li>Click the center circle to zoom back out</li>

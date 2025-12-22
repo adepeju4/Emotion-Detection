@@ -15,10 +15,10 @@ function EmotionDefinition({ emotion, icon, autismContext }: EmotionItem) {
   });
 
   return (
-    <div className="border-l-4 border-gray-200 pl-6 py-4">
+    <div className="border-l-4 border-gray-200 pl-4 sm:pl-6 py-3 sm:py-4">
       <div className="flex items-center mb-2">
-        <span className="text-2xl mr-3">{icon}</span>
-        <h3 className="text-lg font-semibold text-gray-900">{emotion}</h3>
+        <span className="text-xl sm:text-2xl mr-2 sm:mr-3">{icon}</span>
+        <h3 className="text-base sm:text-lg font-semibold text-gray-900">{emotion}</h3>
       </div>
       
       {isLoading ? (
@@ -107,43 +107,43 @@ export default function LearnEmotions() {
   ];
 
   return (
-    <div className="min-h-screen bg-white py-24">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-white py-16 sm:py-20 md:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <article className="prose prose-lg prose-gray max-w-none">
-          <header className="mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Emotion Detection for Autism Support</h1>
-            <p className="text-xl text-gray-600 mb-6">Using AI to make emotional communication easier and more inclusive</p>
-            <div className="flex items-center text-sm text-gray-500 mb-8">
+          <header className="mb-8 sm:mb-12">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Emotion Detection for Autism Support</h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-4 sm:mb-6">Using AI to make emotional communication easier and more inclusive</p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-0 text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8">
               <span>By Adepeju Peace Orefejo</span>
-              <span className="mx-2">•</span>
+              <span className="hidden sm:inline mx-2">•</span>
               <span>Research Project</span>
             </div>
           </header>
 
-          <div className="mb-8">
-            <p className="text-lg leading-relaxed text-gray-700 mb-6">
+          <div className="mb-6 sm:mb-8">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed text-gray-700 mb-4 sm:mb-6">
               Autism Spectrum Disorder (ASD) is a neurodevelopmental condition that affects how people perceive, process, and respond to the world around them. One of the most significant challenges many autistic individuals face is recognizing and interpreting emotions from facial expressions, which can create barriers in social interactions, education, and daily life.
             </p>
             
-            <blockquote className="border-l-4 border-blue-500 pl-6 py-2 my-8 bg-blue-50">
-              <p className="text-gray-700 italic">
+            <blockquote className="border-l-4 border-blue-500 pl-4 sm:pl-6 py-2 my-6 sm:my-8 bg-blue-50">
+              <p className="text-sm sm:text-base text-gray-700 italic">
                 "Our expressions only seem limited because you think differently from us."
               </p>
-              <cite className="text-sm text-gray-500 mt-2 block">— Naoki Higashida, autistic author of The Reason I Jump (age 13)</cite>
+              <cite className="text-xs sm:text-sm text-gray-500 mt-2 block">— Naoki Higashida, autistic author of The Reason I Jump (age 13)</cite>
             </blockquote>
             
-            <p className="text-gray-700 mb-6">
+            <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
               Understanding these challenges is crucial for creating more inclusive environments and developing supportive tools that respect neurodiversity. This page explores the emotional recognition difficulties faced by autistic individuals and why advocacy and understanding are so important.
             </p>
           </div>
 
-          <section className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Why Autism Advocacy Matters</h2>
-            <p className="text-gray-700 mb-6">
+          <section className="mb-8 sm:mb-12">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Why Autism Advocacy Matters</h2>
+            <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6">
               Autism affects approximately 1 in 36 children in the United States, yet many people still don't understand the unique challenges autistic individuals face. Emotional recognition difficulties can lead to:
             </p>
             
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
               <li className="flex items-start">
                 <span className="text-red-500 mr-3 mt-1">😰</span>
                 <div>
@@ -189,13 +189,13 @@ export default function LearnEmotions() {
               For many autistic individuals, facial expressions that seem obvious to neurotypical people can be confusing or overwhelming. Psychologist Paul Ekman identified seven universal facial expressions, but autistic individuals often struggle to distinguish between them or miss subtle cues that others notice immediately.
             </p>
             
-            <div className="bg-yellow-50 border-l-4 border-yellow-500 pl-6 py-4 mb-8">
-              <p className="text-gray-700">
+            <div className="bg-yellow-50 border-l-4 border-yellow-500 pl-4 sm:pl-6 py-3 sm:py-4 mb-6 sm:mb-8">
+              <p className="text-sm sm:text-base text-gray-700">
                 <strong>Common Struggle:</strong> An autistic person might see someone's face and think "Are they angry or just concentrating?" while a neurotypical person immediately recognizes the emotion. This uncertainty can create anxiety and social avoidance.
               </p>
             </div>
             
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {emotions.map((item, index) => (
                 <EmotionDefinition key={index} {...item} />
               ))}
