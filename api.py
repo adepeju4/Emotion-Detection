@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form
+from fastapi import FastAPI, File, UploadFile, Form, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 from dotenv import load_dotenv
@@ -26,7 +26,9 @@ app.add_middleware(
 load_models()
 load_face_detector()
 
-@app.post("/predict")
+router = APIRouter(prefix="/api")
+
+@router.post("/predict")
 async def predict(
     file: UploadFile = File(...),
     model: str = Form("fer2013")
@@ -34,20 +36,22 @@ async def predict(
     """Detect faces in an image and predict emotions for each face using the specified model."""
     return await predict_emotions(file, model)
 
-@app.get("/models")
+@router.get("/models")
 async def get_models():
     """Get information about available models."""
     return get_models_info()
 
-@app.get("/health")
+@router.get("/health")
 async def health_check():
     """Check API health and model status."""
     return get_health_status()
 
-@app.get("/dictionary-definition/{word}")
+@router.get("/dictionary-definition/{word}")
 async def get_dictionary_definition(word: str):
     """Proxy endpoint to fetch dictionary definition from Free Dictionary API."""
     return await get_word_definition(word)
+
+app.include_router(router)
 
 @app.get("/")
 async def root():
@@ -55,9 +59,9 @@ async def root():
         "message": "Emotion Detection API",
         "version": "1.0.0",
         "endpoints": [
-            "/predict - POST - Detect emotions in an image",
-            "/models - GET - Get available models info",
-            "/health - GET - Check API health",
-            "/dictionary-definition/{word} - GET - Get dictionary definition"
+            "/api/predict - POST - Detect emotions in an image",
+            "/api/models - GET - Get available models info",
+            "/api/health - GET - Check API health",
+            "/api/dictionary-definition/{word} - GET - Get dictionary definition"
         ]
     }
