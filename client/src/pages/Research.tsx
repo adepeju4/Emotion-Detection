@@ -229,7 +229,7 @@ export default function Research() {
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <img
-                  src="/src/assets/results/fer2013/confusion_matrix.png"
+                  src="/results/fer2013/confusion_matrix.png"
                   alt="FER2013 Confusion Matrix"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -238,7 +238,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/affectnet/confusion_matrix.png"
+                  src="/results/affectnet/confusion_matrix.png"
                   alt="AffectNet Confusion Matrix"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -247,7 +247,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/ckplus/confusion_matrix.png"
+                  src="/results/ckplus/confusion_matrix.png"
                   alt="CK+ Confusion Matrix"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -268,7 +268,7 @@ export default function Research() {
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               <div className="text-center">
                 <img
-                  src="/src/assets/results/fer2013/training_history.png"
+                  src="/results/fer2013/training_history.png"
                   alt="FER2013 Training History"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -277,7 +277,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/affectnet/training_history.png"
+                  src="/results/affectnet/training_history.png"
                   alt="AffectNet Training History"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -286,7 +286,7 @@ export default function Research() {
                 </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/ckplus/training_history.png"
+                  src="/results/ckplus/training_history.png"
                   alt="CK+ Training History"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -303,7 +303,7 @@ export default function Research() {
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <img
-                  src="/src/assets/results/fer2013/per_class_accuracy.png"
+                  src="/results/fer2013/per_class_accuracy.png"
                   alt="FER2013 Per-Class Accuracy"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -311,7 +311,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/affectnet/per_class_accuracy.png"
+                  src="/results/affectnet/per_class_accuracy.png"
                   alt="AffectNet Per-Class Accuracy"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -319,7 +319,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/ckplus/per_class_accuracy.png"
+                  src="/results/ckplus/per_class_accuracy.png"
                   alt="CK+ Per-Class Accuracy"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -342,7 +342,7 @@ export default function Research() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="text-center">
                     <img
-                      src="/src/assets/results/fer2013/feature_maps_conv2d.png"
+                      src="/results/fer2013/feature_maps_conv2d.png"
                       alt="FER2013 Feature Maps Layer 1"
                       className="w-full rounded-lg border shadow-sm mb-3"
                     />
@@ -350,7 +350,7 @@ export default function Research() {
                   </div>
                   <div className="text-center">
                     <img
-                      src="/src/assets/results/fer2013/feature_maps_conv2d_1.png"
+                      src="/results/fer2013/feature_maps_conv2d_1.png"
                       alt="FER2013 Feature Maps Layer 2"
                       className="w-full rounded-lg border shadow-sm mb-3"
                     />
@@ -364,7 +364,7 @@ export default function Research() {
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="text-center">
                     <img
-                      src="/src/assets/results/affectnet/feature_maps_conv2d.png"
+                      src="/results/affectnet/feature_maps_conv2d.png"
                       alt="AffectNet Feature Maps Layer 1"
                       className="w-full rounded-lg border shadow-sm mb-3"
                     />
@@ -372,7 +372,7 @@ export default function Research() {
                   </div>
                   <div className="text-center">
                     <img
-                      src="/src/assets/results/affectnet/feature_maps_conv2d_1.png"
+                      src="/results/affectnet/feature_maps_conv2d_1.png"
                       alt="AffectNet Feature Maps Layer 2"
                       className="w-full rounded-lg border shadow-sm mb-3"
                     />
@@ -386,7 +386,7 @@ export default function Research() {
                 <div className="grid md:grid-cols-2 gap-6">
                 <div className="text-center">
                     <img
-                      src="/src/assets/results/ckplus/feature_maps_conv2d.png"
+                      src="/results/ckplus/feature_maps_conv2d.png"
                       alt="CK+ Feature Maps Layer 1"
                       className="w-full rounded-lg border shadow-sm mb-3"
                     />
@@ -394,7 +394,7 @@ export default function Research() {
                   </div>
                   <div className="text-center">
                     <img
-                      src="/src/assets/results/ckplus/feature_maps_conv2d_1.png"
+                      src="/results/ckplus/feature_maps_conv2d_1.png"
                       alt="CK+ Feature Maps Layer 2"
                       className="w-full rounded-lg border shadow-sm mb-3"
                     />
@@ -415,7 +415,7 @@ export default function Research() {
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center">
                 <img
-                  src="/src/assets/results/fer2013/sample_predictions.png"
+                  src="/results/fer2013/sample_predictions.png"
                   alt="FER2013 Sample Predictions"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -424,7 +424,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/affectnet/sample_predictions.png"
+                  src="/results/affectnet/sample_predictions.png"
                   alt="AffectNet Sample Predictions"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -433,7 +433,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/ckplus/sample_predictions.png"
+                  src="/results/ckplus/sample_predictions.png"
                   alt="CK+ Sample Predictions"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -454,7 +454,7 @@ export default function Research() {
             <div className="grid md:grid-cols-3 gap-6 mb-12">
               <div className="text-center">
                 <img
-                  src="/src/assets/results/preprocessing_examples/fer2013_happiness_preprocessing.png"
+                  src="/results/preprocessing_examples/fer2013_happiness_preprocessing.png"
                   alt="FER2013 Preprocessing Example"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -463,7 +463,7 @@ export default function Research() {
                 </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/preprocessing_examples/affectnet_happiness_preprocessing.png"
+                  src="/results/preprocessing_examples/affectnet_happiness_preprocessing.png"
                   alt="AffectNet Preprocessing Example"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />
@@ -472,7 +472,7 @@ export default function Research() {
               </div>
               <div className="text-center">
                 <img
-                  src="/src/assets/results/preprocessing_examples/ck+_happiness_preprocessing.png"
+                  src="/results/preprocessing_examples/ck+_happiness_preprocessing.png"
                   alt="CK+ Preprocessing Example"
                   className="w-full rounded-lg border shadow-sm mb-3"
                 />

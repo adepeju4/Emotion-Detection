@@ -27,6 +27,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ScrollToTop />
       <Navbar />
+      <div className="pt-20">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -37,6 +38,7 @@ function App() {
         <Route path="/research" element={<Research />} />
         <Route path="/emotions" element={<Emotions />} />
       </Routes>
+      </div>
       <Footer />
       <Toaster position="top-right" />
     </QueryClientProvider>
