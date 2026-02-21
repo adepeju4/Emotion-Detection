@@ -345,22 +345,20 @@ export default function UploadPhoto() {
                             )}
                           </div>
                           <div className="flex-1">
-                            <div className="space-y-4">
+                            <div className="space-y-3">
                               {Object.entries(face.all_predictions)
                                 .sort(([, a], [, b]) => (b as number) - (a as number))
                                 .map(([emotion, confidence]) => (
-                                  <div key={emotion} className="flex items-center justify-between">
-                                    <span className="capitalize font-medium text-gray-700">{emotion}</span>
-                                    <div className="flex items-center gap-4">
-                                      <div className="w-40 bg-gray-200 rounded-full h-2">
-                                        <div
-                                          className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-                                          style={{ width: `${((confidence as number) * 100).toFixed(1)}%` }}
-                                        ></div>
-                                      </div>
-                                      <span className="text-sm font-medium w-12 text-right text-gray-600">
-                                        {((confidence as number) * 100).toFixed(1)}%
-                                      </span>
+                                  <div key={emotion}>
+                                    <div className="flex justify-between mb-1">
+                                      <span className="capitalize text-sm font-medium text-gray-700">{emotion}</span>
+                                      <span className="text-sm font-medium text-gray-600">{((confidence as number) * 100).toFixed(1)}%</span>
+                                    </div>
+                                    <div className="w-full bg-gray-200 rounded-full h-2">
+                                      <div
+                                        className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                                        style={{ width: `${((confidence as number) * 100).toFixed(1)}%` }}
+                                      ></div>
                                     </div>
                                   </div>
                                 ))}
