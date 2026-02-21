@@ -4,18 +4,19 @@ import { ArrowLeft, Upload } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
-import type { EmotionResult, ModelInfo } from "@/types/emotion";
+import type { ModelInfo } from "@/types/emotion";
+import type { AnalysisResponse, FaceResult } from "@/lib/api";
 
 export default function UploadPhoto() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<any>(null);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResponse | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>("affectnet");
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string>("");
   const [models, setModels] = useState<Record<string, ModelInfo>>({});
-  const [analysisHistory, setAnalysisHistory] = useState<any[]>([]);
+  const [, setAnalysisHistory] = useState<AnalysisResponse[]>([]);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -125,17 +126,6 @@ export default function UploadPhoto() {
     }
   }, [selectedImage, selectedModel]);
 
-  const loadSampleImage = useCallback(async (url: string) => {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const file = new File([blob], 'sample-image.jpg', { type: 'image/jpeg' });
-      handleImageUpload(file);
-    } catch (error) {
-      console.error('Error loading sample image:', error);
-      setError('Failed to load sample image. Please try another one or upload your own.');
-    }
-  }, [handleImageUpload]);
 
   return (
     <div className="min-h-screen bg-white py-16 sm:py-20 md:py-24">
@@ -225,7 +215,8 @@ export default function UploadPhoto() {
                 >
                   Choose Photo
                 </Button>
-                <input
+                  <input
+                    title="Choose Photo"
                   ref={fileInputRef}
                   type="file"
                   accept="image/jpeg,image/jpg,image/png,.jpg,.jpeg,.png"
@@ -240,6 +231,7 @@ export default function UploadPhoto() {
                 Select AI Model
               </label>
               <select
+                  title="Select AI Model"
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -288,7 +280,7 @@ export default function UploadPhoto() {
                     src={imageUrl}
                     alt="Preview"
                     className="w-full h-48 sm:h-56 md:h-64 object-contain"
-                    onError={(e) => {
+                      onError={() => {
                       setError("Failed to load image preview. The file may be corrupted or in an unsupported format.");
                       setImageUrl("");
                       setSelectedImage(null);
@@ -337,7 +329,7 @@ export default function UploadPhoto() {
                 {analysisResults && (
                   <div className="mt-8 space-y-6">
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">Analysis Results</h4>
-                    {analysisResults.faces && analysisResults.faces.map((face: any) => (
+                      {analysisResults.faces && analysisResults.faces.map((face: FaceResult) => (
                       <div key={face.face_id} className="p-6 bg-gray-50 border border-gray-200 rounded-lg">
                         <div className="flex items-start gap-6 mb-6">
                           <div className="flex-shrink-0">
@@ -362,8 +354,7 @@ export default function UploadPhoto() {
                                     <div className="flex items-center gap-4">
                                       <div className="w-40 bg-gray-200 rounded-full h-2">
                                         <div
-                                          className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-                                          style={{ width: `${(confidence as number) * 100}%` }}
+                                          className={`bg-${emotion.toLowerCase()} h-2 rounded-full transition-all duration-500 w-${(confidence as number) * 100}%`}
                                         ></div>
                                       </div>
                                       <span className="text-sm font-medium w-12 text-right text-gray-600">

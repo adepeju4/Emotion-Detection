@@ -4,7 +4,8 @@ import { ArrowLeft, Camera, Video } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
-import type { EmotionResult, ModelInfo } from "@/types/emotion";
+import type { ModelInfo } from "@/types/emotion";
+import type { FaceResult, AnalysisResponse } from "@/lib/api";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useFaceDetector } from "@/hooks/useFaceDetector";
 
@@ -45,8 +46,8 @@ const EmotionBarChart = ({ predictions }: { predictions: Record<string, number> 
             }}
             domain={[0, 100]}
           />
-          <Tooltip 
-            formatter={(value: number) => [`${value.toFixed(1)}%`, 'Confidence']}
+          <Tooltip
+            formatter={(value: number | string | undefined) => [`${Number(value ?? 0).toFixed(1)}%`, 'Confidence']}
             animationDuration={300}
           />
           <Bar 
@@ -73,7 +74,7 @@ const EmotionBarChart = ({ predictions }: { predictions: Record<string, number> 
 export default function Webcam() {
   const [isWebcamActive, setIsWebcamActive] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<EmotionResult | null>(null);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResponse | null>(null);
   const [selectedModel, setSelectedModel] = useState("fer2013");
   const [error, setError] = useState<string>("");
   const [models, setModels] = useState<Record<string, ModelInfo>>({});
@@ -175,21 +176,21 @@ export default function Webcam() {
           const blob = await new Promise<Blob>((resolve) =>
             image.toBlob((b) => resolve(b as Blob), 'image/jpeg', 0.9)
           );
-          const result = await api.analyzeImage(blob, selectedModel);
-          return result.faces && result.faces.length > 0 ? result.faces[0] : null;
+          return api.analyzeImage(blob, selectedModel);
         })
       );
 
       ctx.fillStyle = '#22c55e';
       ctx.font = '16px sans-serif';
-      predictions.forEach((pred, idx) => {
-        if (pred) {
+      predictions.forEach((result, idx) => {
+        const face = result.faces[0];
+        if (face) {
           const box = faces[idx].box;
-          ctx.fillText(`${pred.label} ${(pred.confidence * 100).toFixed(0)}%`, box.x, box.y - 6);
+          ctx.fillText(`${face.label} ${(face.confidence * 100).toFixed(0)}%`, box.x, box.y - 6);
         }
       });
 
-      const validPredictions = predictions.filter(p => p !== null);
+      const validPredictions = predictions.filter(p => p.faces.length > 0);
       if (validPredictions.length > 0) {
         setAnalysisResults(validPredictions[0]);
       }
@@ -296,11 +297,11 @@ export default function Webcam() {
                   className="absolute top-0 left-0 w-full h-full pointer-events-none"
                 />
                 
-                {analysisResults && (
+                {analysisResults && analysisResults.faces[0] && (
                   <div className="absolute top-2 right-2 bg-black/75 text-white p-4 rounded-lg">
-                    <p className="font-semibold">{analysisResults.label}</p>
+                    <p className="font-semibold">{analysisResults.faces[0].label}</p>
                     <p className="text-sm opacity-75">
-                      Confidence: {(analysisResults.confidence * 100).toFixed(1)}%
+                      Confidence: {(analysisResults.faces[0].confidence * 100).toFixed(1)}%
                     </p>
                   </div>
                 )}
@@ -314,10 +315,10 @@ export default function Webcam() {
 
               <canvas ref={canvasRef} className="hidden" />
 
-              {analysisResults && (
+              {analysisResults && analysisResults.faces[0] && (
                 <div className="mt-8 p-4 bg-white border rounded-lg">
                   <h3 className="font-semibold text-gray-800 mb-4">Emotion Analysis</h3>
-                  <EmotionBarChart predictions={analysisResults.all_predictions} />
+                  <EmotionBarChart predictions={analysisResults.faces[0].all_predictions} />
                   <p className="text-xs text-gray-500 mt-4 text-center">
                     Processing time: {analysisResults.processing_time.toFixed(3)}s
                   </p>

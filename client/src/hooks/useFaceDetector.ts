@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import * as faceapi from "@vladmandic/face-api";
+import faceapi from "@vladmandic/face-api";
 
 export type DetectedFace = {
   box: faceapi.Box;

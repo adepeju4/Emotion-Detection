@@ -5,16 +5,17 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import type { ModelInfo } from "@/types/emotion";
+import type { AnalysisResponse, FaceResult } from "@/lib/api";
 
 export default function WebcamAnalysis() {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisResults, setAnalysisResults] = useState<any>(null);
+  const [analysisResults, setAnalysisResults] = useState<AnalysisResponse | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>("fer2013");
   const [error, setError] = useState<string>("");
   const [models, setModels] = useState<Record<string, ModelInfo>>({});
-  const [capturedImage, setCapturedImage] = useState<string | null>(null);
-  const [showCapturedImage, setShowCapturedImage] = useState(false);
+  const [, setCapturedImage] = useState<string | null>(null);
+  const [, setShowCapturedImage] = useState(false);
   const [autoAnalyze, setAutoAnalyze] = useState(false);
   const [analysisInterval, setAnalysisInterval] = useState<number | null>(null);
   const analysisIntervalRef = useRef<number | null>(null);
@@ -200,7 +201,7 @@ export default function WebcamAnalysis() {
       analysisIntervalRef.current = interval;
       setAutoAnalyze(true);
     }, 2000);
-  }, [isAnalyzing, isStreaming, analyzeFrame]);
+  }, [isAnalyzing, isStreaming, analyzeFrame, analysisInterval]);
 
   const resetAnalysis = useCallback(() => {
     setAnalysisResults(null);
@@ -282,6 +283,7 @@ export default function WebcamAnalysis() {
                   Select AI Model
                 </label>
                 <select
+                  title="Select AI Model"
                   value={selectedModel}
                   onChange={(e) => setSelectedModel(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -425,7 +427,7 @@ export default function WebcamAnalysis() {
                 {analysisResults && (
                   <div className="mt-8 space-y-6">
                     <h4 className="text-lg font-semibold text-gray-900 mb-4">Analysis Results</h4>
-                    {analysisResults.faces && analysisResults.faces.map((face: any) => (
+                    {analysisResults.faces && analysisResults.faces.map((face: FaceResult) => (
                       <div key={face.face_id} className="p-6 bg-gray-50 border border-gray-200 rounded-lg">
                         <div className="flex items-start gap-6 mb-6">
                           <div className="flex-shrink-0">
@@ -450,8 +452,7 @@ export default function WebcamAnalysis() {
                                     <div className="flex items-center gap-4">
                                       <div className="w-40 bg-gray-200 rounded-full h-2">
                                         <div
-                                          className="bg-blue-600 h-2 rounded-full transition-all duration-500"
-                                          style={{ width: `${(confidence as number) * 100}%` }}
+                                          className={`bg-${emotion.toLowerCase()} h-2 rounded-full transition-all duration-500 w-${(confidence as number) * 100}%`}
                                         ></div>
                                       </div>
                                       <span className="text-sm font-medium w-12 text-right text-gray-600">
