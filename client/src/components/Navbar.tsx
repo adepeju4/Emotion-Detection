@@ -47,7 +47,7 @@ export default function Navbar() {
         scrolled ? "bg-white/80 shadow-sm" : "bg-transparent"
       )}
     >
-      <div className="max-w-6xl mx-auto h-20 px-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto h-16 lg:h-20 px-4 flex items-center justify-between">
         <Link 
           to="/" 
           className={cn(
@@ -70,6 +70,7 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
+          type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           className="lg:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
           aria-label="Toggle menu"
