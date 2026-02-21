@@ -60,9 +60,9 @@ export default function Navbar() {
         </Link>
         
         {/* Desktop Navigation */}
-        <div className="hidden lg:flex gap-6 text-sm">
+        <div className="hidden lg:flex gap-2 text-sm">
           {navLinks.map(({ path, label }) => (
-            <Link key={path} to={path} className={getLinkClassName(path)}>
+            <Link key={path} to={path} className={cn(getLinkClassName(path), "px-3 py-2 rounded-md")}>
               {label}
             </Link>
           ))}
