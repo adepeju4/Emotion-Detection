@@ -87,6 +87,7 @@ site/
 
 # Client
 client/node_modules
+client/package-lock.json
 client/logs
 client/logs/*.log
 client/.vscode/*
