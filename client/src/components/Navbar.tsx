@@ -47,7 +47,7 @@ export default function Navbar() {
         scrolled ? "bg-white/80 shadow-sm" : "bg-transparent"
       )}
     >
-      <div className="max-w-6xl mx-auto h-14 px-4 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto h-20 px-4 flex items-center justify-between">
         <Link 
           to="/" 
           className={cn(
