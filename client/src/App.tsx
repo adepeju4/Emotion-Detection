@@ -27,7 +27,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ScrollToTop />
       <Navbar />
-      <div className="pt-16 lg:pt-20">
+      <div className="pt-14 lg:pt-20">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
