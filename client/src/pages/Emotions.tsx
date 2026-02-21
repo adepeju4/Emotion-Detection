@@ -23,7 +23,7 @@ export default function Emotions() {
   });
 
   return (
-    <div className="min-h-screen bg-white py-6 sm:py-8">
+    <div className="min-h-screen bg-white pt-2 pb-6 sm:pb-8">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-start lg:items-center min-h-[calc(100vh-3rem)]">
           <div className="bg-white rounded-lg p-4 sm:p-6">

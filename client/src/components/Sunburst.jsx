@@ -41,8 +41,8 @@ function Sunburst({ onSelect }) {
 
         const svgElement = d3.create("svg")
             .attr("viewBox", [-width / 2, -height / 2, width, width])
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", "100%")
+            .attr("height", "auto")
             .style("font", "15px sans-serif");
 
         const path = svgElement.append("g")
