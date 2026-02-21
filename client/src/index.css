@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar {
+  display: none;
+}
+
 @theme {
   --color-textSmall: #202A36;
   --color-textLarge: #242424;
