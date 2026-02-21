@@ -13,9 +13,9 @@ install-api:
 .PHONY: dev
 dev:
 	@if [ -d ".venv" ]; then \
-		.venv/bin/python -m uvicorn api:app --reload --host 127.0.0.1 --port 8000; \
+		.venv/bin/python -m uvicorn api:app --reload --reload-exclude .venv --port 8000; \
 	elif [ -d "venv" ]; then \
-		venv/bin/python -m uvicorn api:app --reload --host 127.0.0.1 --port 8000; \
+		venv/bin/python -m uvicorn api:app --reload --reload-exclude .venv --port 8000; \
 	else \
 		@echo "Error: No virtual environment found. Run 'make install-api' first."; \
 		exit 1; \
@@ -26,4 +26,6 @@ frontend:
 	@echo "Starting React frontend..."
 	cd client && npm run dev
 
+install-frontend:
+	cd client && npm install
 

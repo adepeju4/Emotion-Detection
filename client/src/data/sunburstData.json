@@ -1,0 +1,711 @@
+{
+    "name": "Emotions",
+    "children": [
+        {
+            "name": "Happy",
+            "color": "#EF9783",
+            "children": [
+                {
+                    "name": "Playful",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Aroused",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Cheeky",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Content",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Free",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Joyful",
+                                "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Interested",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Aroused",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Cheeky",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Proud",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Successful",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Confident",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Accepted",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Respected",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Valued",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Powerful",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Courageous",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Creative",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Peaceful",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Loving",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Thankful",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Trusting",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Sensitive",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Intimate",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Optimistic",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Hopeful",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Inspired",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Surprised",
+            "color": "#E7A54F",
+            "children": [
+                {
+                    "name": "Startled",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Shocked",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Dismayed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Confused",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Disillusioned",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Perplexed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Amazed",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Awe",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Astonished",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Excited",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Energetic",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Eager",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Bad",
+            "color": "#25BC9E",
+            "children": [
+                {
+                    "name": "Bored",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Indifferent",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Apathetic",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Stressed",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Overwhelmed",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Out of Control",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Tired",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Sleepy",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Unfocused",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Busy",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Pressured",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Rushed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Fearful",
+            "color": "#16A3BA",
+            "children": [
+                {
+                    "name": "Scared",
+                    "color": "#1EBECB",
+                    "value": 10,
+        
+                    "children": [
+                        {
+                            "name": "Helpless",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Frightened",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Anxious",
+                    "color": "#1EBECB",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Overwhelmed",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Worried",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Insecure",
+                    "color": "#1EBECB",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Inadequate",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Inferior",
+                                "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Weak",
+                    "color": "#1EBECB",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Worthless",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Insignificant",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Rejected",
+                    "color": "#1EBECB",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Excluded",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Persecuted",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Threatened",
+                    "color": "#1EBECB",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Nervous",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Exposed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Angry",
+            "color": "#7373B3",
+            "children": [
+                {
+                    "name": "Let down",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Betrayed",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Resentful",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Humiliated",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Disrespected",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Ridiculed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Bitter",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Indignant",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Violated",
+                                    "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Mad",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Furious",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Jealous",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Aggressive",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Provoked",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Hostile",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Frustrated",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Infuriated",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Annoyed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Distant",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Withdrawn",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Numb",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Critical",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Skeptical",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Dissmissive",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Disgusted",
+            "color": "#AC7CB6",
+            "children": [
+                {
+                    "name": "Awful",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Nauseated",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Detestable",
+                                    "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Repelled",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Horrified",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Hesitant",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+        
+                {
+                    "name": "Disappointed",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Appalled",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Revolted",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Disapproving",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Judgemental",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Embarrassed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Sad",
+            "color": "#D17B86",
+            "children": [
+                {
+                    "name": "Lonely",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Isolated",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Abandoned",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Vulnerable",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Victimized",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Fragile",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Despair",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Grief",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Powerless",
+                                "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Guilty",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Ashamed",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Remorseful",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Depressed",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Inferior",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Empty",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                },
+                {
+                    "name": "Hurt",
+                    "value": 10,
+                    "children": [
+                        {
+                            "name": "Embarrassed",
+                            "value": 1000,
+                            "children": []
+                        },
+                        {
+                            "name": "Disappointed",
+                            "value": 1000,
+                            "children": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
