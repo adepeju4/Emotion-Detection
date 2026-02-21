@@ -354,7 +354,8 @@ export default function UploadPhoto() {
                                     <div className="flex items-center gap-4">
                                       <div className="w-40 bg-gray-200 rounded-full h-2">
                                         <div
-                                          className={`bg-${emotion.toLowerCase()} h-2 rounded-full transition-all duration-500 w-${(confidence as number) * 100}%`}
+                                          className="bg-blue-500 h-2 rounded-full transition-all duration-500"
+                                          style={{ width: `${((confidence as number) * 100).toFixed(1)}%` }}
                                         ></div>
                                       </div>
                                       <span className="text-sm font-medium w-12 text-right text-gray-600">
