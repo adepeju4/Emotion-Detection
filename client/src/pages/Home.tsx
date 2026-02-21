@@ -14,7 +14,7 @@ export default function Home() {
   };
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <header className="max-w-6xl mx-auto px-4 pt-20 sm:pt-24 md:pt-28 pb-12 sm:pb-16 md:pb-24">
+      <header className="max-w-6xl mx-auto px-4 pt-8 sm:pt-10 md:pt-12 pb-6 sm:pb-8 md:pb-10">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight tracking-tight">
           EMOTION DETECTION FOR AUTISM SUPPORT
         </h1>
@@ -23,7 +23,7 @@ export default function Home() {
         <p className="mt-1 text-xs sm:text-sm text-gray-600">MSc. Software Engineering 2025</p>
       </header>
 
-      <nav className="sticky top-14 z-10 border-y bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+      <nav className="sticky top-20 z-10 border-y bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <div className="max-w-6xl mx-auto px-4">
           <ul className="flex gap-3 sm:gap-4 md:gap-6 py-2 md:py-3 text-xs sm:text-sm overflow-x-auto whitespace-nowrap scrollbar-none">
             <li><a href="#abstract" className="hover:underline px-1">Abstract</a></li>
