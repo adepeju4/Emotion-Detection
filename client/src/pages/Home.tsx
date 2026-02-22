@@ -23,7 +23,7 @@ export default function Home() {
         <p className="mt-1 text-xs sm:text-sm text-gray-600">MSc. Software Engineering 2025</p>
       </header>
 
-      <nav className="sticky top-20 z-10 border-y bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+      <nav className="sticky top-14 lg:top-20 z-10 border-y bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <div className="max-w-6xl mx-auto px-4">
           <ul className="flex gap-3 sm:gap-4 md:gap-6 py-2 md:py-3 text-xs sm:text-sm overflow-x-auto whitespace-nowrap scrollbar-none">
             <li><a href="#abstract" className="hover:underline px-1">Abstract</a></li>
