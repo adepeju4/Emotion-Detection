@@ -14,7 +14,7 @@ export default function Emotions() {
     }
   };
 
-  const emotionDef = selectedEmotion ? getEmotionDefinition(selectedEmotion) : null;
+  const emotionDef = selectedEmotion ? getEmotionDefinition() : null;
 
   const { data: dictionaryResult, isLoading: isLoadingOxford } = useQuery<DictionaryResult | null>({
     queryKey: ["dictionary", selectedEmotion],
