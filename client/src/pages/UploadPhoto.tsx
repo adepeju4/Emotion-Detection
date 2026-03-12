@@ -17,7 +17,8 @@ export default function UploadPhoto() {
   const [error, setError] = useState<string>("");
   const [models, setModels] = useState<Record<string, ModelInfo>>({});
   const [, setAnalysisHistory] = useState<AnalysisResponse[]>([]);
-  
+  const [croppedFaces, setCroppedFaces] = useState<Record<number, string>>({});
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -73,6 +74,7 @@ export default function UploadPhoto() {
     const url = URL.createObjectURL(file);
     setImageUrl(url);
     setAnalysisResults(null);
+    setCroppedFaces({});
     setError("");
   }, [imageUrl]);
 
@@ -105,15 +107,34 @@ export default function UploadPhoto() {
 
 
   const analyzeImage = useCallback(async () => {
-    if (!selectedImage) return;
-    
+    if (!selectedImage || !imageUrl) return;
+
     setIsAnalyzing(true);
     setError("");
-    
+
     try {
       const result = await api.analyzeImage(selectedImage, selectedModel);
       setAnalysisResults(result);
       setAnalysisHistory(prev => [...prev, result]);
+
+      if (result.faces && result.faces.length > 0) {
+        const img = new Image();
+        img.src = imageUrl;
+        await new Promise<void>(resolve => { img.onload = () => resolve(); });
+        const crops: Record<number, string> = {};
+        for (const face of result.faces) {
+          const { x, y, width, height } = face.bbox;
+          const cropCanvas = document.createElement('canvas');
+          cropCanvas.width = width;
+          cropCanvas.height = height;
+          const ctx = cropCanvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
+            crops[face.face_id] = cropCanvas.toDataURL('image/jpeg', 0.85);
+          }
+        }
+        setCroppedFaces(crops);
+      }
     } catch (error) {
       console.error('Error analyzing image:', error);
       if (error instanceof Error) {
@@ -334,10 +355,10 @@ export default function UploadPhoto() {
                         <div className="flex items-start gap-6 mb-6">
                           <div className="flex-shrink-0">
                             <h5 className="font-semibold mb-3 text-gray-900">Face {face.face_id}: {face.label}</h5>
-                            {face.cropped_face && (
+                            {croppedFaces[face.face_id] && (
                               <div className="w-28 h-28 border-2 border-gray-300 rounded-lg overflow-hidden shadow-sm">
                                 <img
-                                  src={`data:image/png;base64,${face.cropped_face}`}
+                                  src={croppedFaces[face.face_id]}
                                   alt={`Cropped face ${face.face_id}`}
                                   className="w-full h-full object-cover"
                                 />

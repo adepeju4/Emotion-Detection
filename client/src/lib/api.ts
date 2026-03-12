@@ -4,10 +4,10 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? "";
 
 export interface FaceResult {
   face_id: number;
+  bbox: { x: number; y: number; width: number; height: number };
   label: string;
   confidence: number;
   all_predictions: Record<string, number>;
-  cropped_face?: string;
 }
 
 export interface AnalysisResponse {

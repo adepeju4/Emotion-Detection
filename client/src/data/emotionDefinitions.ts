@@ -6,9 +6,5 @@ export interface EmotionDefinition {
   physicalCues?: string[];
 }
 
-export const getEmotionDefinition = (emotionName: string): EmotionDefinition | null => {
-  return null;
-};
-
 
 
