@@ -5,7 +5,7 @@ from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-face_detector: Optional[cv2.CascadeClassifier] = None
+face_detector = None
 
 def load_face_detector():
     """Load face detection cascade classifier."""

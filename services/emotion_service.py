@@ -99,7 +99,21 @@ def detect_and_analyze_faces(image: Image.Image, model_name: str) -> List[Dict]:
 
         gray = cv2.cvtColor(img_cv, cv2.COLOR_BGR2GRAY)
 
-        if isinstance(face_detector, cv2.CascadeClassifier):
+        if isinstance(face_detector, cv2.dnn.Net):
+            blob = cv2.dnn.blobFromImage(img_cv, 1.0, (300, 300), (104.0, 177.0, 123.0))
+            face_detector.setInput(blob)
+            detections = face_detector.forward()
+            faces = []
+            for i in range(detections.shape[2]):
+                confidence = detections[0, 0, i, 2]
+                if confidence < 0.5:
+                    continue
+                x1 = int(detections[0, 0, i, 3] * img_width)
+                y1 = int(detections[0, 0, i, 4] * img_height)
+                x2 = int(detections[0, 0, i, 5] * img_width)
+                y2 = int(detections[0, 0, i, 6] * img_height)
+                faces.append((x1, y1, x2 - x1, y2 - y1, float(confidence)))
+        elif isinstance(face_detector, cv2.CascadeClassifier):
             detections = face_detector.detectMultiScale(
                 gray,
                 scaleFactor=1.1,
@@ -109,16 +123,7 @@ def detect_and_analyze_faces(image: Image.Image, model_name: str) -> List[Dict]:
             )
             faces = [(x, y, w, h, 1.0) for (x, y, w, h) in detections]
         else:
-            cascade_path = cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
-            cascade = cv2.CascadeClassifier(cascade_path)
-            detections = cascade.detectMultiScale(
-                gray,
-                scaleFactor=1.1,
-                minNeighbors=5,
-                minSize=(30, 30),
-                flags=cv2.CASCADE_SCALE_IMAGE
-            )
-            faces = [(x, y, w, h, 1.0) for (x, y, w, h) in detections]
+            faces = []
 
         if len(faces) == 0:
             return []
