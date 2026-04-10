@@ -3,7 +3,6 @@ from __future__ import annotations
 import numpy as np
 import cv2
 import io
-import base64
 import logging
 from typing import Dict, List, TYPE_CHECKING
 from fastapi import HTTPException
@@ -149,10 +148,6 @@ def detect_and_analyze_faces(image: Image.Image, model_name: str) -> List[Dict]:
             face_pil = Image.fromarray(face_roi)
             face_pil_oriented = face_pil
 
-            face_buffer = io.BytesIO()
-            face_pil_oriented.save(face_buffer, format='PNG', optimize=True)
-            face_base64 = base64.b64encode(face_buffer.getvalue()).decode('utf-8')
-
             face_array = preprocess_image(face_pil_oriented, target_size)
 
             preds = model_predict(model_name, face_array)
@@ -172,7 +167,6 @@ def detect_and_analyze_faces(image: Image.Image, model_name: str) -> List[Dict]:
                 "label": str(pred_label),
                 "confidence": float(confidence),
                 "all_predictions": {k: float(v) for k, v in sorted_predictions.items()},
-                "cropped_face": str(face_base64)
             })
             face_id += 1
 

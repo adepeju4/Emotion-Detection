@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { api } from "@/lib/api";
 import type { ModelInfo } from "@/types/emotion";
-import type { FaceResult, AnalysisResponse } from "@/lib/api";
+import type { AnalysisResponse } from "@/lib/api";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { useFaceDetector } from "@/hooks/useFaceDetector";
 
@@ -47,7 +47,7 @@ const EmotionBarChart = ({ predictions }: { predictions: Record<string, number> 
             domain={[0, 100]}
           />
           <Tooltip
-            formatter={(value: number | string | undefined) => [`${Number(value ?? 0).toFixed(1)}%`, 'Confidence']}
+            formatter={(value) => [`${Number(value ?? 0).toFixed(1)}%`, 'Confidence'] as [string, string]}
             animationDuration={300}
           />
           <Bar 
@@ -163,7 +163,7 @@ export default function Webcam() {
 
       ctx.clearRect(0, 0, overlay.width, overlay.height);
 
-      const faces = await detect(video, overlay);
+      const faces = await detect(video);
 
       ctx.strokeStyle = '#22c55e';
       ctx.lineWidth = 2;
@@ -223,32 +223,35 @@ export default function Webcam() {
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Real-time Emotion Analysis</h1>
-            <p className="text-gray-600">Use your webcam for live emotion detection</p>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Real-time Emotion Analysis
+            </h1>
+            <p className="text-gray-600">
+              Use your webcam for live emotion detection
+            </p>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           <Card className="p-8">
             <h2 className="text-xl font-semibold mb-6">Webcam Controls</h2>
-            
+
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Select AI Model
               </label>
               <select
+                name="select-model"
+                title="select-model"
                 value={selectedModel}
                 onChange={(e) => setSelectedModel(e.target.value)}
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isWebcamActive}
               >
                 {Object.entries(models).map(([id, info]) => (
-                  <option 
-                    key={id} 
-                    value={id}
-                    disabled={!info.available}
-                  >
-                    {id.toUpperCase()} ({info.available ? 'Available' : 'Not Available'})
+                  <option key={id} value={id} disabled={!info.available}>
+                    {id.toUpperCase()} (
+                    {info.available ? "Available" : "Not Available"})
                   </option>
                 ))}
               </select>
@@ -282,7 +285,7 @@ export default function Webcam() {
 
           <Card className="p-8">
             <h2 className="text-xl font-semibold mb-6">Webcam Preview</h2>
-            
+
             <div className="space-y-4">
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
@@ -296,12 +299,15 @@ export default function Webcam() {
                   ref={overlayRef}
                   className="absolute top-0 left-0 w-full h-full pointer-events-none"
                 />
-                
+
                 {analysisResults && analysisResults.faces[0] && (
                   <div className="absolute top-2 right-2 bg-black/75 text-white p-4 rounded-lg">
-                    <p className="font-semibold">{analysisResults.faces[0].label}</p>
+                    <p className="font-semibold">
+                      {analysisResults.faces[0].label}
+                    </p>
                     <p className="text-sm opacity-75">
-                      Confidence: {(analysisResults.faces[0].confidence * 100).toFixed(1)}%
+                      Confidence:{" "}
+                      {(analysisResults.faces[0].confidence * 100).toFixed(1)}%
                     </p>
                   </div>
                 )}
@@ -317,10 +323,15 @@ export default function Webcam() {
 
               {analysisResults && analysisResults.faces[0] && (
                 <div className="mt-8 p-4 bg-white border rounded-lg">
-                  <h3 className="font-semibold text-gray-800 mb-4">Emotion Analysis</h3>
-                  <EmotionBarChart predictions={analysisResults.faces[0].all_predictions} />
+                  <h3 className="font-semibold text-gray-800 mb-4">
+                    Emotion Analysis
+                  </h3>
+                  <EmotionBarChart
+                    predictions={analysisResults.faces[0].all_predictions}
+                  />
                   <p className="text-xs text-gray-500 mt-4 text-center">
-                    Processing time: {analysisResults.processing_time.toFixed(3)}s
+                    Processing time:{" "}
+                    {analysisResults.processing_time.toFixed(3)}s
                   </p>
                 </div>
               )}

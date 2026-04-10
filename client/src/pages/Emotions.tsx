@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Sunburst from "@/components/Sunburst";
-import { getEmotionDefinition } from "@/data/emotionDefinitions";
 import { fetchDefinition, type DictionaryResult } from "@/lib/dictionary";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -13,8 +12,6 @@ export default function Emotions() {
       setSelectedEmotion(emotion);
     }
   };
-
-  const emotionDef = selectedEmotion ? getEmotionDefinition(selectedEmotion) : null;
 
   const { data: dictionaryResult, isLoading: isLoadingOxford } = useQuery<DictionaryResult | null>({
     queryKey: ["dictionary", selectedEmotion],
@@ -36,10 +33,7 @@ export default function Emotions() {
             {selectedEmotion ? (
               <div className="space-y-6">
                 <div className="border-b pb-4">
-                  <div className="flex items-center mb-3">
-                    {emotionDef?.icon && <span className="text-2xl sm:text-3xl md:text-4xl mr-3 sm:mr-4">{emotionDef.icon}</span>}
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 break-words">{selectedEmotion}</h2>
-                  </div>
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 break-words">{selectedEmotion}</h2>
                 </div>
 
                 <div className="space-y-4">
@@ -99,40 +93,6 @@ export default function Emotions() {
                     )}
                   </div>
 
-                  {emotionDef?.autismContext && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Autism Context</h3>
-                      <p className="text-gray-700 leading-relaxed italic">{emotionDef.autismContext}</p>
-                    </div>
-                  )}
-
-                  {emotionDef?.relatedEmotions && emotionDef.relatedEmotions.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Related Emotions</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {emotionDef.relatedEmotions.map((emotion, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm font-medium cursor-pointer hover:bg-blue-100 transition-colors"
-                            onClick={() => setSelectedEmotion(emotion)}
-                          >
-                            {emotion}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {emotionDef?.physicalCues && emotionDef.physicalCues.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">Physical Cues</h3>
-                      <ul className="list-disc pl-6 space-y-1">
-                        {emotionDef.physicalCues.map((cue, idx) => (
-                          <li key={idx} className="text-gray-700">{cue}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
                 </div>
               </div>
             ) : (

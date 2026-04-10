@@ -19,6 +19,7 @@ export default function WebcamAnalysis() {
   const [autoAnalyze, setAutoAnalyze] = useState(false);
   const [analysisInterval, setAnalysisInterval] = useState<number | null>(null);
   const analysisIntervalRef = useRef<number | null>(null);
+  const [croppedFaces, setCroppedFaces] = useState<Record<number, string>>({});
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -157,9 +158,25 @@ export default function WebcamAnalysis() {
 
       const result = await api.analyzeImage(frame, selectedModel);
       setAnalysisResults(result);
-      
-      
-      
+
+      if (result.faces && result.faces.length > 0 && canvasRef.current) {
+        const canvas = canvasRef.current;
+        const crops: Record<number, string> = {};
+        for (const face of result.faces) {
+          const { x, y, width, height } = face.bbox;
+          const cropCanvas = document.createElement('canvas');
+          cropCanvas.width = width;
+          cropCanvas.height = height;
+          const ctx = cropCanvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(canvas, x, y, width, height, 0, 0, width, height);
+            crops[face.face_id] = cropCanvas.toDataURL('image/jpeg', 0.85);
+          }
+        }
+        setCroppedFaces(crops);
+      }
+
+
     } catch (error) {
       console.error('Error analyzing frame:', error);
       
@@ -207,6 +224,7 @@ export default function WebcamAnalysis() {
     setAnalysisResults(null);
     setCapturedImage(null);
     setShowCapturedImage(false);
+    setCroppedFaces({});
   }, []);
 
   
@@ -432,10 +450,10 @@ export default function WebcamAnalysis() {
                         <div className="flex items-start gap-6 mb-6">
                           <div className="flex-shrink-0">
                             <h5 className="font-semibold mb-3 text-gray-900">Face {face.face_id}: {face.label}</h5>
-                            {face.cropped_face && (
+                            {croppedFaces[face.face_id] && (
                               <div className="w-28 h-28 border-2 border-gray-300 rounded-lg overflow-hidden shadow-sm">
                                 <img
-                                  src={`data:image/png;base64,${face.cropped_face}`}
+                                  src={croppedFaces[face.face_id]}
                                   alt={`Cropped face ${face.face_id}`}
                                   className="w-full h-full object-cover"
                                 />
