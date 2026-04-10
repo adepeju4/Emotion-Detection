@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, Form, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import Response
 import logging
 from dotenv import load_dotenv
 
@@ -31,7 +32,8 @@ router = APIRouter(prefix="/api")
 @router.post("/predict")
 async def predict(
     file: UploadFile = File(...),
-    model: str = Form("fer2013")
+    model: str = Form("fer2013"),
+    response: Response = None,
 ):
     """Detect faces in an image and predict emotions for each face using the specified model."""
     return await predict_emotions(file, model)
