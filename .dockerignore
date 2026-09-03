@@ -1,0 +1,13 @@
+.git
+data
+results
+scripts
+src
+notebooks
+client
+*.h5
+__pycache__
+*.pyc
+.venv
+venv
+.DS_Store
